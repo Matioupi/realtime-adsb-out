@@ -97,4 +97,7 @@ https://mode-s.org/
 - french version https://www.bazl.admin.ch/bazl/fr/home/experts/reglementation-et-informations-de-base/bases-legales-et-directives/annexes-a-la-convention-de-l-organisation-internationale-de-l-av.html  
 
 *ICAO doc 9871 edition 1* which can be retrieved here (There is an edition 2 of this document but all seems to be behing paywalls):
-- [ICAO doc 9871 edition 1](http://www.aviationchief.com/uploads/9/2/0/9/92098238/icao_doc_9871_-_technical_provisions_for_mode_s_-_advanced_edition_1.pdf)
+- [ICAO doc 9871 edition 1](http://www.aviationchief.com/uploads/9/2/0/9/92098238/icao_doc_9871_-_technical_provisions_for_mode_s_-_advanced_edition_1.pdf)  
+  
+A DEFCON 20 video on Youtube that already highlighted some ADS-B weaknesses (and at this time, there was no HackRF):
+[DEFCON 20 (2012) - RenderMan - Hacker + Airplanes = No Good Can Come Of This](https://www.youtube.com/watch?v=mY2uiLfXmaI)
