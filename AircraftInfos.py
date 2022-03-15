@@ -15,8 +15,38 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import math
+import json
 
 class AircraftInfos:
+
+    @classmethod
+    def from_json(cls,filepath):
+        json_file = open(filepath,'r')
+        state_dic = json.load(json_file)
+        json_file.close()
+
+        icao_aa = state_dic["icao_aa"]
+        callsign = state_dic["callsign"]
+        squawk = state_dic["squawk"]
+
+        alt_ft  = state_dic["alt_ft"]
+        lat_deg = state_dic["lat_deg"]
+        lon_deg = state_dic["lon_deg"]
+        speed_kph = state_dic["speed_kph"]
+        vspeed_ftpmin = state_dic["vspeed_ftpmin"]
+        maxloadfactor = state_dic["maxloadfactor"]
+        track_angle_deg = state_dic["track_angle_deg"]
+        capability = state_dic["capability"]
+        type_code = state_dic["type_code"]
+        surveillance_status = state_dic["surveillance_status"]
+        timesync = state_dic["timesync"]
+        nicsup = state_dic["nicsup"]
+        on_surface = state_dic["on_surface"]
+
+        return AircraftInfos(icao_aa,callsign,squawk,
+                                  lat_deg,lon_deg,alt_ft,speed_kph,vspeed_ftpmin,maxloadfactor,track_angle_deg, \
+                                  timesync,capability,type_code,surveillance_status,nicsup,on_surface)
+
     def __init__(self,icao,callsign,squawk,
                       lat_deg,lon_deg,alt_msl_ft,speed_kph,vspeed_ftpmin,maxloadfactor,track_angle_deg,
                       timesync,capability,type_code,surveillance_status,nicsupb,on_surface):

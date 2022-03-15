@@ -1,0 +1,18 @@
+{
+    "icao_aa":"0x508035",
+    "callsign":"MRYIA",
+    "squawk": "7000",
+    "alt_ft": 4500.0,
+    "lat_deg": 50.44994,
+    "lon_deg": 30.5211,
+    "speed_kph": 600.0,
+    "vspeed_ftpmin": 0.0,
+    "maxloadfactor": 1.03,
+    "track_angle_deg": 0.0,
+    "capability": 5,
+    "type_code": 11,
+    "surveillance_status": 0,
+    "timesync": 0,
+    "nicsup": 0,
+    "on_surface": false
+}

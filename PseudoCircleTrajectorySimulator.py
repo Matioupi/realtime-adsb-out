@@ -20,28 +20,25 @@ from AbstractTrajectorySimulatorBase import AbstractTrajectorySimulatorBase
 class PseudoCircleTrajectorySimulator(AbstractTrajectorySimulatorBase):
     def __init__(self,mutex,broadcast_thread,aircrafinfos):
         super().__init__(mutex,broadcast_thread,aircrafinfos)
-        self._starttime = datetime.datetime.now(datetime.timezone.utc)
-        
-        self._lasttime = self._starttime
 
         self._lat0 = aircrafinfos.lat_deg
         self._lon0 = aircrafinfos.lon_deg
 
     def refresh_delay(self):
-        return 0.005
+        return 0.02
 
     def update_aircraftinfos(self):
-        now = datetime.datetime.now(datetime.timezone.utc)
-        elapsed = (now - self._lasttime).total_seconds()
         turn_rate = self.getTurnRate()
         R = self.getTurnRadius()
         Rlat = (R/6371000.0)*(180.0/math.pi)
-        ta = self._aircraftinfos.track_angle_deg - (turn_rate*elapsed)*(180.0/math.pi)
+        ta = self._aircraftinfos.track_angle_deg - (turn_rate*self.refresh_delay())*(180.0/math.pi)
         ta = math.fmod(ta,360.0)
-        self._aircraftinfos.track_angle_deg = ta
+        self._aircraftinfos.track_angle_deg = ta # intermediate value and single assignment needed at time because of
+                                                 # setter and change detection mecanism in AircraftInfo (somehox shitty)
+                                                 # TODO : implement better mecanism
         self._aircraftinfos.lat_deg = self._lat0 - Rlat*math.sin(self._aircraftinfos.track_angle_deg*math.pi/180.0)
         self._aircraftinfos.lon_deg = self._lon0 + Rlat/math.cos(self._aircraftinfos.lat_deg*math.pi/180.0)*math.cos(self._aircraftinfos.track_angle_deg*math.pi/180.0)
-        self._lasttime = now
+        #self._lasttime = now
 
     def getTurnRate(self):
         tr = (9.81/self._aircraftinfos.speed_mps)*math.sqrt(self._aircraftinfos.maxloadfactor**2.0 - 1.0)

@@ -1,0 +1,7 @@
+{
+    "plane1":
+    {
+        "filename":"./examples/MRYIA.json",
+        "trajectory_type":"circle"
+    }
+}

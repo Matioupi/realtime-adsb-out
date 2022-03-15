@@ -53,7 +53,7 @@ The hardware setup I'm using is pictured below. Please note the RF attenuators (
 The extra 1090MHz filter is probably not requiered as the flight aware dongle already features 1090 MHz filtering.
 My HackRF is fitted with a 0.5 ppm TCXO
 
-![test setup image](./test-setup.jpg "test setup")
+![test setup image](./images/test-setup.jpg "test setup")
 
 The default hackrf settings in repo are :
 - 1090 MHz
@@ -72,11 +72,47 @@ Those forged broadcasts may be used to spoof ATC, trigger TCAS or other maliciou
 
 ## Command line examples
 
+####*Command line switches can be displayed with*  
+
+```
+mathieu@devbox:~/Dev/matioupi/realtime-adsb-out$ ./realtime-adsb-out.py -h
+Usage: ./realtime-adsb-out.py [options]
+
+-h | --help              Display help message.
+--scenario <opt>          Scenario mode with a provided scenario filepath
+--icao <opt>             Callsign in hex, Default:0x508035
+--callsign <opt>         Callsign (8 chars max), Default:DEADBEEF
+--squawk <opt>           4-digits 4096 code squawk, Default:7000
+--trajectorytype <opt>   Type of simulated trajectory amongst :
+                           fixed       : steady aircraft
+                           circle      : pseudo circular flight
+                           random      : random positions inside circle area
+                           waypoints   : fly long flight path
+                           Default:fixed
+--lat <opt>              Latitude for the plane in decimal degrees, Default:50.44994
+--long <opt>             Longitude for the place in decimal degrees. Default:30.5211
+--altitude <opt>         Altitude in decimal feet, Default:1500.0
+--speed <opt>            Airspeed in decimal kph, Default:300.0
+--vspeed <opt>           Vertical speed en ft/min, positive up, Default:0
+--maxloadfactor          Specify the max load factor for aircraft simulation. Default:1.45
+--trackangle <opt>       Track angle in decimal degrees. Default:0
+--timesync <opt>         0/1, 0 indicates time not synchronous with UTC, Default:0
+--capability <opt>       Capability, Default:5
+--typecode <opt>         ADS-B message type, Default:11
+--sstatus <opt>          Surveillance status, Default:0
+--nicsupplementb <opt>   NIC supplement-B, Default:0
+--surface                Aircraft located on ground, Default:False
+--waypoints <opt>        Waypoints file for waypoints trajectory
+--posrate <opt>          position frame broadcast period in µs, Default: 150000
+```
+
+####*Single plane scenarii can be achieved with command line switches*  
+
 `./realtime-adsb-out.py --callsign 'FCKPUTIN' --alt 4500 --speed 600 --trajectorytype circle --maxloadfactor 1.03`
 
 will generate a pseudo circular trajectory, flown at 4500 ft, 600 km/h and a load factor of 1.03.
 
-![circle mode example image](./adsb-out-circle.png "circle mode example")
+![circle mode example image](./images/adsb-out-circle.png "circle mode example")
 
 `./realtime-adsb-out.py --callsign 'FCKPUTIN' --alt 4500  --trajectorytype random`
 
@@ -84,13 +120,22 @@ will generate a random trajectory in a ~30s at specified (here default) speed ar
 track angle is randomized, speed is randomized, altitude is randomized. The default position frame broadcast period can be lowered in order to
 produce a large numer of tracks in a given area
 
-![random mode example image](./adsb-out-random.png "random mode example")
+![random mode example image](./images/adsb-out-random.png "random mode example")
+
+####*More complex scenarii with multiple planes can be achieved though json configuration files*  
+
+`./realtime-adsb-out.py --scenario ./examples/scenario3.json`  
+  
+![4 planes scenario example](./images/adsb-out-scenario3.png "4 planes scenario example")
+
+The maximum number of planes that can be simulated has not been evaluated yet. It will depends on the refresh rate of each message type, etc.
+Tests have been performed on a laptop computer, but with not too many tracks, it should be possible to run on lighter platforms such as Raspberry Pi.  
 
 ## Reference documentation
 
 All reference documentation from the repositories mentionned in the foreword.
 
-https://mode-s.org/
+[https://mode-s.org/](https://mode-s.org/)
 
 *ICAO Annex 10, Aeronautical Telecommunications, Volume IV - Surveillance Radar and Collision Avoidance Systems* which at time of writing can be retrieved here:
 - english version https://www.bazl.admin.ch/bazl/en/home/specialists/regulations-and-guidelines/legislation-and-directives/anhaenge-zur-konvention-der-internationalen-zivilluftfahrtorgani.html
@@ -99,5 +144,8 @@ https://mode-s.org/
 *ICAO doc 9871 edition 1* which can be retrieved here (There is an edition 2 of this document but all seems to be behing paywalls):
 - [ICAO doc 9871 edition 1](http://www.aviationchief.com/uploads/9/2/0/9/92098238/icao_doc_9871_-_technical_provisions_for_mode_s_-_advanced_edition_1.pdf)  
   
+Ghost in the Air(Traffic): On insecurity of ADS-B protocol and practical attacks on ADS-B devices (Andrei Costin, Aurélien Francillon):
+[publication PDF hosted at eurocom.fr](https://www.s3.eurecom.fr/docs/bh12us_costin.pdf)
+
 A DEFCON 20 video on Youtube that already highlighted some ADS-B weaknesses (and at this time, there was no HackRF):
 [DEFCON 20 (2012) - RenderMan - Hacker + Airplanes = No Good Can Come Of This](https://www.youtube.com/watch?v=mY2uiLfXmaI)

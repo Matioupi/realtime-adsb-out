@@ -1,0 +1,18 @@
+{
+    "icao_aa":"0x50FF5E",
+    "callsign":"R10002",
+    "squawk" : "7000",
+    "alt_ft": 6500.0,
+    "lat_deg": 50.44994,
+    "lon_deg": 30.8211,
+    "speed_kph": 500.0,
+    "vspeed_ftpmin": 0.0,
+    "maxloadfactor": 1.06,
+    "track_angle_deg": 0.0,
+    "capability": 5,
+    "type_code": 11,
+    "surveillance_status": 0,
+    "timesync": 0,
+    "nicsup": 0,
+    "on_surface": false
+}

@@ -14,8 +14,9 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import sys, time, math
-import threading
+import sys, time, math, os
+import threading, json
+import traceback
 
 from AircraftInfos import AircraftInfos
 from FixedTrajectorySimulator import FixedTrajectorySimulator
@@ -30,6 +31,7 @@ def usage(msg=False):
     if msg:print(msg)
     print("Usage: %s [options]\n" % sys.argv[0])
     print("-h | --help              Display help message.")
+    print("--scenario <opt>          Scenario mode with a provided scenario filepath")
     print("--icao <opt>             Callsign in hex, Default:0x508035")
     print("--callsign <opt>         Callsign (8 chars max), Default:DEADBEEF")
     print("--squawk <opt>           4-digits 4096 code squawk, Default:7000")
@@ -59,6 +61,21 @@ def usage(msg=False):
 
     sys.exit(2)
 
+def getTrackSimulationThread(trajectory_type,brodcast_thread,aircraftinfos,waypoints_file = None):
+
+    if trajectory_type == 'fixed':
+        return FixedTrajectorySimulator(brodcast_thread.getMutex(),brodcast_thread,aircraftinfos)
+    elif trajectory_type == 'circle':
+        return PseudoCircleTrajectorySimulator(brodcast_thread.getMutex(),brodcast_thread,aircraftinfos)
+    elif trajectory_type == 'random':
+        return RandomTrajectorySimulator(brodcast_thread.getMutex(),brodcast_thread,aircraftinfos)        
+    elif trajectory_type == 'waypoints':
+        print("WaypointsTrajectorySimulator not implemented yet")
+        exit(-1)
+        return WaypointsTrajectorySimulator(brodcast_thread.getMutex(),brodcast_thread,aircraftinfos,waypoints_file)
+    else:
+        return None
+
 def main():
 
     # Default values
@@ -82,10 +99,10 @@ def main():
     trajectory_type = 'fixed'
     waypoints_file = None
     posrate = 150000
-
+    scenariofile = None
     try:
         (opts, args) = getopt(sys.argv[1:], 'h', \
-            ['help','icao=','callsign=','squawk=','trajectorytype=','lat=','long=','altitude=','speed=','vspeed=','maxloadfactor=','trackangle=',
+            ['help','scenario=','icao=','callsign=','squawk=','trajectorytype=','lat=','long=','altitude=','speed=','vspeed=','maxloadfactor=','trackangle=',
             'timesync=','capability=','typecode=','sstatus=','nicsupplementb=','surface','posrate='
             ])
     except GetoptError as err:
@@ -94,6 +111,7 @@ def main():
     if len(opts) != 0:
         for (opt, arg) in opts:
             if opt in ('-h', '--help'):usage()
+            elif opt in ('--scenario'):scenariofile = arg
             elif opt in ('--icao'):icao_aa = arg
             elif opt in ('--callsign'):callsign = arg
             elif opt in ('--squawk'):squawk = arg
@@ -117,38 +135,64 @@ def main():
             elif opt in ('--posrate'):posrate = int(arg)
             else:usage("Unknown option %s\n" % opt)
 
-    aircraftinfos = AircraftInfos(icao_aa,callsign,squawk, \
-                                  lat_deg,lon_deg,alt_ft,speed_kph,vspeed_ftpmin,maxloadfactor,track_angle_deg, \
-                                  timesync,capability,type_code,surveillance_status,nicsup,on_surface)
+    track_simulators = []
+    broadcast_thread = HackRfBroadcastThread(posrate) # posrate would usally be used with random mode to generate load of tracks
 
-    # TODO : the mutex would better be implemented as an object attribute in broadcast thread
-    mutex = threading.Lock()
+    if scenariofile == None:
+        print("Going to run in single plane from command line mode")
+        aircraftinfos = AircraftInfos(icao_aa,callsign,squawk, \
+                                    lat_deg,lon_deg,alt_ft,speed_kph,vspeed_ftpmin,maxloadfactor,track_angle_deg, \
+                                    timesync,capability,type_code,surveillance_status,nicsup,on_surface)
 
-    brodcast_thread = HackRfBroadcastThread(mutex,posrate) # posrate would usally be used with random mode to generate load of tracks
+        track_simulation = getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file)
 
-    if trajectory_type == 'fixed':
-        trajectory_simulator = FixedTrajectorySimulator(mutex,brodcast_thread,aircraftinfos)
-    elif trajectory_type == 'circle':
-        trajectory_simulator = PseudoCircleTrajectorySimulator(mutex,brodcast_thread,aircraftinfos)
-    elif trajectory_type == 'random':
-        trajectory_simulator = RandomTrajectorySimulator(mutex,brodcast_thread,aircraftinfos)        
-    elif trajectory_type == 'waypoints':
-        print("WaypointsTrajectorySimulator not implemented yet")
-        exit(-1)
-        trajectory_simulator = WaypointsTrajectorySimulator(mutex,brodcast_thread,aircraftinfos,waypoints_file)
+        track_simulators.append(track_simulation)
+        
+    else:
+        print("Going to run in json scenario mode from file "+os.path.abspath(scenariofile))
+        with open(scenariofile,'r') as json_file:
+            scenario = json.load(json_file)
+
+        for plane in scenario.values():
+            plane_info = AircraftInfos.from_json(plane["filename"])
+
+            if "waypoints_file" in plane:
+                waypoints_file = plane["waypoints_file"]
+
+            track_simulation = getTrackSimulationThread(plane["trajectory_type"],broadcast_thread,plane_info,waypoints_file)
+
+            track_simulators.append(track_simulation)
+
+        print("scenario contains tracks simulation instructions for "+str(len(track_simulators))+" planes:")
+        for tsim in track_simulators:
+            print("callsign: "+tsim.aircraftinfos.callsign.ljust(9,' ')+"MSL altitude: "+"{:7.1f}".format(tsim.aircraftinfos.alt_msl_ft)+" ft")
+
+    for tsim in track_simulators:
+        broadcast_thread.register_track_simulation_thread(tsim)
 
     while(val:=input("Type \'s + Enter\' to start the adsb-out simulation, and type \'s + Enter\' again to stop it:\n") != 's'):
         time.sleep(0.05)
 
-    trajectory_simulator.start()
-    brodcast_thread.start()
+    # start all threads
+    for tsim in track_simulators:
+        tsim.start()
+
+    broadcast_thread.start()
+
     # user input loop. Todo : implement other commands ? (in that case don't forget to check if mutex protection is needed)
     while(val:=input("") != 's'):
         time.sleep(0.05)
-    trajectory_simulator.stop()
-    brodcast_thread.stop()
-    trajectory_simulator.join()
-    brodcast_thread.join()
+
+    # stop all threads
+    for tsim in track_simulators:
+        tsim.stop()
+        
+    broadcast_thread.stop()
+
+    # wait for all threads to terminate
+    for tsim in track_simulators:
+        tsim.join()
+    broadcast_thread.join()
 
     print("reatime-adsb-out simulation is finished")
 

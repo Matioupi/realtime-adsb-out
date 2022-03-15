@@ -21,7 +21,7 @@ class FixedTrajectorySimulator(AbstractTrajectorySimulatorBase):
         super().__init__(mutex,broadcast_thread,aircrafinfos)
 
     def refresh_delay(self):
-        return 0.005
+        return 0.05
 
     def update_aircraftinfos(self):
         pass

@@ -57,19 +57,14 @@ def hackrfTXCB(hackrf_transfer):
 
 @Singleton
 class HackRfBroadcastThread(threading.Thread):
-    def __init__(self,mutex,airborne_position_refresh_period = 150000):
+    def __init__(self,airborne_position_refresh_period = 150000):
         super().__init__()
-        self._mutex = mutex
+        self._mutex = threading.Lock()
 
         self._lowlevelencoder = ADSBLowLevelEncoder()
 
-        self._messages = {}
-        # key : "name of message" value : ["data to be broadcasted", datetime of last broadcast, delay_between 2 messages of this type]
-        self._messages["identification"] = [None, None, 10000000]    # max should be 15s
-        self._messages["register_6116"] = [None, None, 800000]       # TODO : specs says that interval should be randomized between [0.7s;0.9s] and max is 1.0s
-        self._messages["airborne_position"] = [None, None, airborne_position_refresh_period]   # max should be 0.2s
-        self._messages["surface_position"] = [None, None, 150000]    # max should be 0.2s
-        self._messages["airborne_velocity"] = [None, None, 1200000]  # max should be 1.3s
+        self._messages_feed_threads = {}
+
 
         # Initialize pyHackRF library
         result = HackRF.initialize()
@@ -86,6 +81,8 @@ class HackRfBroadcastThread(threading.Thread):
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
 
+        self._hackrf_broadcaster.setCrystalPPM(0)
+            
         result = self._hackrf_broadcaster.setSampleRate(2000000)
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
@@ -95,7 +92,7 @@ class HackRfBroadcastThread(threading.Thread):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
 
         #result = self.hackrf_broadcaster.setFrequency(868000000)   # free frequency for over the air brodcast tests
-        result = self._hackrf_broadcaster.setFrequency(1090000000)   # do not use 1090MHz for actual over the air broadcasting
+        result = self._hackrf_broadcaster.setFrequency(1090000000)  # do not use 1090MHz for actual over the air broadcasting
                                                                     # only if you use wire feed (you'll need attenuators in that case)
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
@@ -125,53 +122,113 @@ class HackRfBroadcastThread(threading.Thread):
     def stop(self):
         self._do_stop = True
 
+    def getMutex(self):
+        return self._mutex
+
     # updates the next data to be broadcaster for a given message type
+    #@Timed
     def replace_message(self,type,frame_even,frame_odd = []):
-        frame_ppm = self._lowlevelencoder.frame_1090es_ppm_modulate(frame_even, frame_odd)
-        frame_IQ = self._lowlevelencoder.hackrf_raw_IQ_format(frame_ppm)
 
-        # this will usuallyy be called from another thread, so mutex lock mecanism is used during update
+        frame_IQ = self._lowlevelencoder.frame_1090es_ppm_modulate_IQ(frame_even, frame_odd)
+
+          # this will usually be called from another thread, so mutex lock mecanism is used during update
+
         self._mutex.acquire()
-        self._messages[type][0] = frame_IQ
+        calling_thread = threading.current_thread()
+        if calling_thread in self._messages_feed_threads:
+            self._messages_feed_threads[calling_thread][type][0] = frame_IQ
         self._mutex.release()
 
-    def broadcast_one_message(self,data): 
-        self._tx_context.last_tx_pos = 0  
-        self._mutex.acquire()        
-        self._tx_context.buffer_length = len(data)
-        self._tx_context.buffer = (c_ubyte*self._tx_context.buffer_length).from_buffer_copy(data)
-        # TODO : need to evaluate if mutex protection is requiered during full broadcast or
-        #        could be reduced to buffer filling (probably can be reduced)
-        #        reduced version is when next line mutex.release() is uncommented and
-        #        mutex release at the end of this method is commented
+    def register_track_simulation_thread(self,feeder_thread):
+        if feeder_thread in self._messages_feed_threads:
+            print(feeder_thread,"already registred as a feeder")
+        else:
+            self._messages_feed_threads[feeder_thread] = {}
 
-        self._mutex.release()
+            # key : "name of message" value : ["data to be broadcasted", datetime of last broadcast, delay_between 2 messages of this type]
+            self._messages_feed_threads[feeder_thread]["identification"] = [None, None, feeder_thread.identitification_message_period_us]
+            self._messages_feed_threads[feeder_thread]["register_6116"] = [None, None, feeder_thread.squawk_message_period_us]
+            self._messages_feed_threads[feeder_thread]["airborne_position"] = [None, None, feeder_thread.position_message_period_us]
+            self._messages_feed_threads[feeder_thread]["surface_position"] = [None, None, feeder_thread.position_message_period_us]
+            self._messages_feed_threads[feeder_thread]["airborne_velocity"] = [None, None, feeder_thread.velocity_message_period_us]
 
-        result = self._hackrf_broadcaster.startTX(hackrfTXCB,self._tx_context)
+    def broadcast_data(self,data):
+        length = len(data)
+        if length != 0:
+            sleep_time = length*0.50e-6*(1.0+1e-6*self._hackrf_broadcaster.getCrystalPPM())
+            self._tx_context.last_tx_pos = 0  
+            self._mutex.acquire()
+            self._tx_context.buffer_length = length
+            self._tx_context.buffer = (c_ubyte*self._tx_context.buffer_length).from_buffer_copy(data)
+            
+            # TODO : need to evaluate if mutex protection is requiered during full broadcast or
+            #        could be reduced to buffer filling (probably can be reduced)
+            #        reduced version is when next line mutex.release() is uncommented and
+            #        mutex release at the end of this method is commented
 
-        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+            self._mutex.release()
 
-        while self._hackrf_broadcaster.isStreaming():
-            time.sleep(0.00001)
+            result = self._hackrf_broadcaster.startTX(hackrfTXCB,self._tx_context)
 
-        result = self._hackrf_broadcaster.stopTX()
-        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-         
-        #self.mutex.release() 
+            if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+                print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+
+            while self._hackrf_broadcaster.isStreaming():
+                time.sleep(sleep_time)
+
+            result = self._hackrf_broadcaster.stopTX()
+            if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+                print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+
+            #self._mutex.release() 
 
     def run(self):
+
         while not self._do_stop:
-            for k,v in self._messages.items():
-                now = datetime.datetime.now(datetime.timezone.utc)
-                # Time throttling : messages are broadcasted only at provided time intervall
-                # TODO : implement UTC syncing mecanism (requiered that the actual host clock is UTC synced)
-                #        which can be implemented to some accuracy level with ntp or GPS + PPS mecanisms
-                if (v[0] != None and len(v[0]) > 0) and (v[1] == None or (now - v[1]) >= datetime.timedelta(seconds=v[2] // 1000000,microseconds=v[2] % 1000000)):
-                    self.broadcast_one_message(v[0])
-                    v[1] = now
-            time.sleep(0.0001)  # this loop will run at 10 kHz max
+            #self._mutex.acquire()
+            now = datetime.datetime.now(datetime.timezone.utc)
+            plane_messages = bytearray()
+            sleep_time = 10.0
+            for thread_broadcast_schedule in self._messages_feed_threads.values():
+                for v in thread_broadcast_schedule.values():
+                    #now = datetime.datetime.now(datetime.timezone.utc)
+                    v2_sec = v[2]*1e-6
+                    if v[1] != None:
+                        remaining = v2_sec - (now - v[1]).total_seconds()
+                    else:
+                        remaining = -float('inf')
+                        sleep_time = 0.0
+                    # Time throttling : messages are broadcasted only at provided time intervall
+                    # TODO : implement UTC syncing mecanism (requiered that the actual host clock is UTC synced) ?
+                    #        which may be implemented to some accuracy level with ntp or GPS + PPS mecanisms ? in Python ?
+                    if (v[0] != None and len(v[0]) > 0) and remaining <= 0.0:
+                        plane_messages.extend(v[0])
+                        v[1] = now
+                    elif remaining > 0.0:
+                        remaining = math.fmod(remaining,v2_sec)
+                        if remaining < sleep_time:
+                            sleep_time = remaining
+
+
+            #print("sleep_time1",sleep_time)
+            bc_length = len(plane_messages)
+            if (bc_length > 0):
+                self.broadcast_data(plane_messages)
+
+                elasped = (datetime.datetime.now(datetime.timezone.utc) - now).total_seconds()
+                sleep_time -= elasped
+
+                if sleep_time < 0.0:
+                    sleep_time = 0.0
+                elif sleep_time < 0.5:
+                    sleep_time *= 0.1
+                else:
+                    sleep_time = 0.5
+
+                time.sleep(0.1*sleep_time)
+            else:
+                time.sleep(0.000001)
+            #self._mutex.release()
 
         # upon exit, reset _do_stop flag in case there is a new start
         self._do_stop = False

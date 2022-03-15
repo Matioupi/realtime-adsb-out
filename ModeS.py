@@ -1,6 +1,8 @@
 from ModeSLocation import ModeSLocation
 import math
 import numpy
+from CustomDecorators import *
+
 ###############################################################
 # Further work on fork
 # Copyright (C) 2017 David Robinson
@@ -9,6 +11,9 @@ class ModeS:
     """
     
     def __init__(self,df,icao,ca):
+
+        self._location = ModeSLocation()
+
         self.df = df        # as far as I understand specification, this should be :
                             # 17 if the broadcast source is an aircraft
                             # 18 if the broadcast source is some other ADSB facility (tower)
@@ -17,30 +22,42 @@ class ModeS:
         self.ca = ca        # capability see §3.1.2.5.2.2.1
                             # (will usually be 5 for level 2 transponder and airborne)
 
+        self._charmap = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ#####_###############0123456789######"
+        self._crc_poly = 0x01FFF409
+
+        self._crc_lookup_T0 = [0]*256
+
+        crc = 0x1000000
+        i = 1
+        while(i < 256):
+            if crc & 0x1000000:
+                crc <<= 1
+                crc = crc ^ self._crc_poly
+            else:
+                crc <<= 1
+                
+            for j in range(i):
+                self._crc_lookup_T0[i ^ j] = (crc ^ self._crc_lookup_T0[j])
+        
+            i <<= 1
+
     def df_frame_start(self):
         """
-        This will build the usual df frame start
+        This will build the usual df frame start and reserve a full frame with "0" for the reste of message
         """        
-        frame = []
-        frame.append((self.df << 3) | self.ca)
-        frame.append((self.icao >> 16) & 0xff)
-        frame.append((self.icao >> 8) & 0xff)
-        frame.append((self.icao) & 0xff)
+        frame = bytearray(14)
+        frame[0] = (self.df << 3) | self.ca
+        frame[1] = ((self.icao >> 16) & 0xff)
+        frame[2] = ((self.icao >> 8) & 0xff)
+        frame[3] = ((self.icao) & 0xff)
         return frame
-
-    def df_frame_append_crc(self,frame):
-        frame_str = "{0:02x}{1:02x}{2:02x}{3:02x}{4:02x}{5:02x}{6:02x}{7:02x}{8:02x}{9:02x}{10:02x}".format(*frame[0:11])
-        frame_crc = self.bin2int(self.modes_crc(frame_str + "000000", encode=True))
-        frame.append((frame_crc >> 16) & 0xff)
-        frame.append((frame_crc >> 8) & 0xff)
-        frame.append((frame_crc) & 0xff)
 
     # Ref :
     # ICAO Annex 10 : Aeronautical Telecommunications
     # Volume IV : Surveillance and Collision Avoidance Systems
     # Figure C-1. Extended Squitter Airborne Position
     # "Register 05_16"
-
+    #@Timed
     def df_encode_airborne_position(self, lat, lon, alt, tc, ss, nicsb, timesync):
         """
         This will encode even and odd frames from airborne position extended squitter message
@@ -52,38 +69,38 @@ class ModeS:
         nicsb = NIC supplement-B (§C.2.3.2.5)
         """
 
-        location = ModeSLocation()
-        enc_alt =	location.encode_alt_modes(alt, False)
+        #encode height information
+        enc_alt =	self._location.encode_alt_modes(alt, False)
         
         #encode that position
-        (evenenclat, evenenclon) = location.cpr_encode(lat, lon, False, False)
-        (oddenclat, oddenclon)   = location.cpr_encode(lat, lon, True, False)
+        (evenenclat, evenenclon) = self._location.cpr_encode(lat, lon, False, False)
+        (oddenclat, oddenclon)   = self._location.cpr_encode(lat, lon, True, False)
 
         ff = 0
         df_frame_even_bytes = self.df_frame_start()
         # data
-        df_frame_even_bytes.append((tc<<3) | (ss<<1) | nicsb)
-        df_frame_even_bytes.append((enc_alt>>4) & 0xff)
-        df_frame_even_bytes.append((enc_alt & 0xf) << 4 | (timesync<<3) | (ff<<2) | (evenenclat>>15))
-        df_frame_even_bytes.append((evenenclat>>7) & 0xff)
-        df_frame_even_bytes.append(((evenenclat & 0x7f) << 1) | (evenenclon>>16))
-        df_frame_even_bytes.append((evenenclon>>8) & 0xff)
-        df_frame_even_bytes.append((evenenclon   ) & 0xff)
+        df_frame_even_bytes[4]  = (tc<<3) | (ss<<1) | nicsb
+        df_frame_even_bytes[5]  = (enc_alt>>4) & 0xff
+        df_frame_even_bytes[6]  = (enc_alt & 0xf) << 4 | (timesync<<3) | (ff<<2) | (evenenclat>>15)
+        df_frame_even_bytes[7]  = (evenenclat>>7) & 0xff
+        df_frame_even_bytes[8]  = ((evenenclat & 0x7f) << 1) | (evenenclon>>16)
+        df_frame_even_bytes[9]  = (evenenclon>>8) & 0xff
+        df_frame_even_bytes[10] = (evenenclon   ) & 0xff
 
-        self.df_frame_append_crc(df_frame_even_bytes)
+        self.df_frame_write_crc(df_frame_even_bytes)
 
         ff = 1
         df_frame_odd_bytes = self.df_frame_start()
         # data
-        df_frame_odd_bytes.append((tc<<3) | (ss<<1) | nicsb)
-        df_frame_odd_bytes.append((enc_alt>>4) & 0xff)
-        df_frame_odd_bytes.append((enc_alt & 0xf) << 4 | (timesync<<3) | (ff<<2) | (oddenclat>>15))
-        df_frame_odd_bytes.append((oddenclat>>7) & 0xff)
-        df_frame_odd_bytes.append(((oddenclat & 0x7f) << 1) | (oddenclon>>16))
-        df_frame_odd_bytes.append((oddenclon>>8) & 0xff)
-        df_frame_odd_bytes.append((oddenclon   ) & 0xff)
+        df_frame_odd_bytes[4]  = (tc<<3) | (ss<<1) | nicsb
+        df_frame_odd_bytes[5]  = (enc_alt>>4) & 0xff
+        df_frame_odd_bytes[6]  = (enc_alt & 0xf) << 4 | (timesync<<3) | (ff<<2) | (oddenclat>>15)
+        df_frame_odd_bytes[7]  = (oddenclat>>7) & 0xff
+        df_frame_odd_bytes[8]  = ((oddenclat & 0x7f) << 1) | (oddenclon>>16)
+        df_frame_odd_bytes[9]  = (oddenclon>>8) & 0xff
+        df_frame_odd_bytes[10] = (oddenclon   ) & 0xff
 
-        self.df_frame_append_crc(df_frame_odd_bytes)
+        self.df_frame_write_crc(df_frame_odd_bytes)
 
         return (df_frame_even_bytes, df_frame_odd_bytes)
 
@@ -101,16 +118,17 @@ class ModeS:
     # Volume IV : Surveillance and Collision Avoidance Systems
     # Figure C-3. Extended Squitter Status
     # "Register 07_16"
+    #@Timed
     def df_encode_extended_squitter_status(self, trs = 0x0, ats = 0x0):
         df_frame = self.df_frame_start()
 
-        df_frame.append((trs << 6) & 0x3 | (ats << 5) & 0x1)
-        df_frame.extend([0]*6)
+        df_frame[4] = ((trs << 6) & 0x3 | (ats << 5) & 0x1)
 
-        self.df_frame_append_crc(df_frame)
+        self.df_frame_write_crc(df_frame)
         return df_frame
     
     #From https://github.com/jaywilhelm/ADSB-Out_Python on 2019-08-18
+    #@Timed
     def df_encode_ground_velocity(self, ground_velocity_kt, track_angle_deg, vertical_rate):
   
         #1-5    downlink format
@@ -161,15 +179,15 @@ class ModeS:
 
         dfvel = self.df_frame_start()
         # data
-        dfvel.append((tc << 3) | st)
-        dfvel.append((ic << 7) | (resv_a << 6) | (NAC << 3) | (S_EW << 2) | ((V_EW >> 8) & 0x03))
-        dfvel.append(0xFF & V_EW)
-        dfvel.append((S_NS << 7) | ((V_NS >> 3))) #& 0x7F))
-        dfvel.append(((V_NS << 5) & 0xE0) | (VrSrc << 4) | (S_Vr << 3) | ((Vr >> 6) & 0x03))        
-        dfvel.append(((Vr  << 2) & 0xFC) | (RESV_B))
-        dfvel.append((S_Dif << 7) | (Dif))
+        dfvel[4] = ((tc << 3) | st)
+        dfvel[5] = ((ic << 7) | (resv_a << 6) | (NAC << 3) | (S_EW << 2) | ((V_EW >> 8) & 0x03))
+        dfvel[6] = (0xFF & V_EW)
+        dfvel[7] = ((S_NS << 7) | ((V_NS >> 3))) #& 0x7F))
+        dfvel[8] = (((V_NS << 5) & 0xE0) | (VrSrc << 4) | (S_Vr << 3) | ((Vr >> 6) & 0x03))        
+        dfvel[9] = (((Vr  << 2) & 0xFC) | (RESV_B))
+        dfvel[10] = ((S_Dif << 7) | (Dif))
 
-        self.df_frame_append_crc(dfvel)
+        self.df_frame_write_crc(dfvel)
 
         return dfvel
 
@@ -186,19 +204,17 @@ class ModeS:
         tc = 1  # §C.2.3.4
         ec = 1  # §C.2.3.4
 
-        map = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ#####_###############0123456789######"
-
         dfname = self.df_frame_start()
         # data
-        dfname.append((tc << 3) | (ec))
-        dfname.append((0xFC & (int(map.find(csname[0])) << 2)) | (0x03 & (int(map.find(csname[1])) >> 6)))
-        dfname.append((0xF0 & (int(map.find(csname[1])) << 4)) | (0x0F & (int(map.find(csname[2])) >> 2)))
-        dfname.append((0xF0 & (int(map.find(csname[2])) << 6)) | (0x3F & (int(map.find(csname[3])) >> 0)))
-        dfname.append((0xFC & (int(map.find(csname[4])) << 2)) | (0x03 & (int(map.find(csname[5])) >> 4)))
-        dfname.append((0xF0 & (int(map.find(csname[5])) << 4)) | (0x0F & (int(map.find(csname[6])) >> 2)))
-        dfname.append((0xF0 & (int(map.find(csname[6])) << 6)) | (0x3F & (int(map.find(csname[7])) >> 0)))
+        dfname[4]  = (tc << 3) | (ec)
+        dfname[5]  = (0xFC & (int(self._charmap.find(csname[0])) << 2)) | (0x03 & (int(self._charmap.find(csname[1])) >> 4))
+        dfname[6]  = (0xF0 & (int(self._charmap.find(csname[1])) << 4)) | (0x0F & (int(self._charmap.find(csname[2])) >> 2))
+        dfname[7]  = (0xF0 & (int(self._charmap.find(csname[2])) << 6)) | (0x3F & (int(self._charmap.find(csname[3])) >> 0))
+        dfname[8]  = (0xFC & (int(self._charmap.find(csname[4])) << 2)) | (0x03 & (int(self._charmap.find(csname[5])) >> 4))
+        dfname[9]  = (0xF0 & (int(self._charmap.find(csname[5])) << 4)) | (0x0F & (int(self._charmap.find(csname[6])) >> 2))
+        dfname[10] = (0xF0 & (int(self._charmap.find(csname[6])) << 6)) | (0x3F & (int(self._charmap.find(csname[7])) >> 0))
 
-        self.df_frame_append_crc(dfname)
+        self.df_frame_write_crc(dfname)
 
         return dfname
 
@@ -208,6 +224,7 @@ class ModeS:
     # Figure C-8a. Extended Squitter Aircraft Status
     # "Register 61_16"
 
+    #@Timed
     def modaA_encode(self,modeA_4096_code = "7000", emergency_state = 0x0):
         frame = self.df_frame_start()
         # data
@@ -216,7 +233,7 @@ class ModeS:
                   # 1 : Emergency/Priority Status and Mode A Code
                   # 2 : TCAS/ACAS RA Broadcast -> Figure C-8b : fields have different meaning
                   # 3-7 : reserved
-        frame.append((format_tc << 3) | st)
+        frame[4] = ((format_tc << 3) | st)
 
         # Encode Squawk
         # ABCD (A:0-7, B:0-7, C:0-7, D:0-7)
@@ -277,67 +294,39 @@ class ModeS:
         elif squawk_str == "7500":
             emergency = 0x5
 
-        frame.append(emergency << 5 | squawk_bits >> 8)
-        frame.append(squawk_bits & 0xFF)
+        frame[5] = (emergency << 5 | squawk_bits >> 8)
+        frame[6] = (squawk_bits & 0xFF)
 
-        frame.extend([0]*4)
-
-        self.df_frame_append_crc(frame)
+        self.df_frame_write_crc(frame)
 
         return frame
 
-###############################################################
-# Copyright (C) 2015 Junzi Sun (TU Delft)
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-###############################################################
+    #@Timed
+    def df_frame_write_crc(self,frame):
+        crc = self.crc24_lu(frame[0:11])
+        frame[11] = crc >> 16
+        frame[12] = (crc >> 8) & 0xFF
+        frame[13] = crc & 0xFF
 
-# the polynominal generattor code for CRC
-        
-    def modes_crc(self, msg, encode=False):
-        """Mode-S Cyclic Redundancy Check
-        Detect if bit error occurs in the Mode-S message
-        Args:
-            msg (string): 28 bytes hexadecimal message string
-            encode (bool): True to encode the date only and return the checksum
-        Returns:
-            string: message checksum, or partity bits (encoder)
-        """
+    #@Timed
+    # CRC24 without lookup table
+    def crc24(self,msg):
+        crc = 0x0
+        for b in msg:
+            crc ^= (b << 16)
+            for i in range(8):
+                crc <<= 1
+                if crc & 0x1000000: crc ^= self._crc_poly
 
-        GENERATOR = "1111111111111010000001001" # polynomial coefficients
-        
-        msgbin = list(self.hex2bin(msg))
+        return crc & 0xFFFFFF
 
-        if encode:
-            msgbin[-24:] = ['0'] * 24
+    #@Timed
+    # CRC24 with lookup table (about 3x faster than non lookup version)
+    def crc24_lu(self,msg):
+        #print("len:",len(msg))
+        crc = 0x0
+        for b in msg:
+            tmp = (crc ^ (b << 16)) >> 16
+            crc = ((crc << 8) ^ self._crc_lookup_T0[tmp & 0xff])
 
-        # loop all bits, except last 24 piraty bits
-        for i in range(len(msgbin)-24):
-            # if 1, perform modulo 2 multiplication,
-            if msgbin[i] == '1':
-                for j in range(len(GENERATOR)):
-                    # modulo 2 multiplication = XOR
-                    msgbin[i+j] = str((int(msgbin[i+j]) ^ int(GENERATOR[j])))
-
-        # last 24 bits
-        reminder = ''.join(msgbin[-24:])
-        return reminder
-
-    def hex2bin(self, hexstr):
-        """Convert a hexdecimal string to binary string, with zero fillings. """
-        scale = 16
-        num_of_bits = len(hexstr) * math.log(scale, 2)
-        binstr = bin(int(hexstr, scale))[2:].zfill(int(num_of_bits))
-        return binstr
-
-    def bin2int(self, binstr):
-        """Convert a binary string to integer. """
-        return int(binstr, 2)
+        return crc & 0xFFFFFF

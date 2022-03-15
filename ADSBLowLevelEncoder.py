@@ -1,23 +1,39 @@
+""" This class is responsible for low level encoding of IQ sample
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <http://www.gnu.org/licenses/>.
+"""
 from CustomDecorators import *
 import numpy
 
 @Singleton
 class ADSBLowLevelEncoder:
-    """
-    Hamming and Manchester Encoding example
-
-    Author: Joel Addison
-    Date: March 2013
-
-    Functions to do (7,4) hamming encoding and decoding, including error detection
-    and correction.
-    Manchester encoding and decoding is also included, and by default will use
-    least bit ordering for the byte that is to be included in the array.
-    """
 
     def __init__(self):
-        self.adsb_frame_preamble = [0xA1,0x40]
-        self.adsb_frame_pause = [0]*70
+        self._adsb_frame_preamble = [0xA1,0x40]
+        self._adsb_frame_pause = [0]*4
+
+        # Build a manchester encoding lookup table
+        self._manchester_lookup = []
+        for i in range(256):
+            me = self.manchester_encode(i)
+            self._manchester_lookup.append([127*val for pair in zip(me, me) for val in pair])
+
+        # Build preamble and pause manchester encoded versions
+        me_bits = numpy.unpackbits(numpy.asarray(self._adsb_frame_preamble, dtype=numpy.uint8))
+        self._adsb_frame_preamble_IQ = [127*val for pair in zip(me_bits, me_bits) for val in pair]
+        self._adsb_frame_pause_IQ = self._adsb_frame_pause*16
+
+        self._len_pre_IQ = len(self._adsb_frame_preamble_IQ)
+        self._len_pause_IQ = len(self._adsb_frame_pause_IQ)
+
 ###############################################################
 # Further work on fork
 # Copyright (C) 2017 David Robinson
@@ -38,65 +54,62 @@ class ADSBLowLevelEncoder:
         # Encode byte
         for i in range(7, -1, -1):
             if self.extract_bit(byte, i):
-                manchester_encoded.extend([0,1])
-            else:
                 manchester_encoded.extend([1,0])
+            else:
+                manchester_encoded.extend([0,1])
 
         return manchester_encoded
 
-    def frame_1090es_ppm_modulate(self, even, odd = []):
+    def frame_1090es_ppm_modulate_IQ(self, even, odd = []):
         """
         Args:
             even and odd: The data frames that need to be converted to PPM
         Returns:
-            The bytearray of the PPM data
+            The bytearray of the IQ samples for PPM modulated data
         """
-        ppm = [ ]
 
         length_even = len(even)
         length_odd  = len(odd)
+      
+        if (length_even != 0 and length_odd == 0):
+            IQ = bytearray(32*length_even+2*self._len_pause_IQ+self._len_pre_IQ)
+            pos = self._len_pause_IQ
+            IQ[pos:pos+self._len_pre_IQ] = self._adsb_frame_preamble_IQ
+            pos += self._len_pre_IQ
 
-        if (length_even != 0):
-            ppm.extend(self.adsb_frame_pause)      # pause
-            ppm.extend(self.adsb_frame_preamble)   # preamble
+            tmp = []
+            for b in even:
+                tmp.extend(self._manchester_lookup[b])
+            IQ[pos:pos+32*length_even] = tmp
             
-            for i in range(length_even):
-                word16 = numpy.packbits(self.manchester_encode(~even[i]))
-                ppm.extend(word16[0:2])
-            
-            ppm.extend(self.adsb_frame_pause)  # pause
+            return IQ
 
-        if (length_odd != 0):
-            ppm.extend(self.adsb_frame_pause)        # pause
-            ppm.extend(self.adsb_frame_preamble)     # preamble
+        elif (length_even != 0 and length_odd != 0):
+            IQ = bytearray(32*(length_even+length_odd)+2*self._len_pre_IQ+3*self._len_pause_IQ)
+            pos = self._len_pause_IQ
+            IQ[pos:pos+self._len_pre_IQ] = self._adsb_frame_preamble_IQ
+            pos += self._len_pre_IQ
 
-            for i in range(length_odd):
-                word16 = numpy.packbits(self.manchester_encode(~odd[i]))
-                ppm.extend(word16[0:2])
+            tmp = []
+            for b in even:
+                tmp.extend(self._manchester_lookup[b])
+            length_even_IQ = 32*length_even
+            IQ[pos:pos+length_even_IQ] = tmp
+            pos += length_even_IQ
 
-            ppm.extend(self.adsb_frame_pause)  # pause
+            pos += self._len_pause_IQ
+
+            IQ[pos:pos+self._len_pre_IQ] = self._adsb_frame_preamble_IQ
+            pos += self._len_pre_IQ
+
+            tmp = []
+            for b in odd:
+                tmp.extend(self._manchester_lookup[b])
+
+            IQ[pos:pos+32*length_odd] = tmp
         
-        return bytearray(ppm)
+            return IQ
 
-    def hackrf_raw_IQ_format(self, ppm):
-        """
-        Args:
-            ppm: this is some data in ppm (pulse position modulation) which will be converted into
-                 hackRF raw IQ sample format, ready to be broadcasted
-            
-        Returns:
-            bytearray: containing the IQ data
-        """
-        signal = []
-        bits = numpy.unpackbits(numpy.asarray(ppm, dtype=numpy.uint8))
-        for bit in bits:
-            if bit == 1:
-                I = 127
-                Q = 127
-            else:
-                I = 0
-                Q = 0
-            signal.append(I)
-            signal.append(Q)
+        else:
 
-        return bytearray(signal)
+            return None
