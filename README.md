@@ -72,7 +72,7 @@ Those forged broadcasts may be used to spoof ATC, trigger TCAS or other maliciou
 
 ## Command line examples
 
-####*Command line switches can be displayed with*  
+#### *Command line switches can be displayed with*  
 
 ```
 mathieu@devbox:~/Dev/matioupi/realtime-adsb-out$ ./realtime-adsb-out.py -h
@@ -106,7 +106,7 @@ Usage: ./realtime-adsb-out.py [options]
 --posrate <opt>          position frame broadcast period in µs, Default: 150000
 ```
 
-####*Single plane scenarii can be achieved with command line switches*  
+#### *Single plane scenarii can be achieved with command line switches*  
 
 `./realtime-adsb-out.py --callsign 'FCKPUTIN' --alt 4500 --speed 600 --trajectorytype circle --maxloadfactor 1.03`
 
@@ -122,7 +122,7 @@ produce a large numer of tracks in a given area
 
 ![random mode example image](./images/adsb-out-random.png "random mode example")
 
-####*More complex scenarii with multiple planes can be achieved though json configuration files*  
+#### *More complex scenarii with multiple planes can be achieved though json configuration files*  
 
 `./realtime-adsb-out.py --scenario ./examples/scenario3.json`  
   
