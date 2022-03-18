@@ -12,6 +12,9 @@ This project is inspired and reuse several parts of several other ADS-B / mode S
 All those repositories are published under GNU General Public License v3.0. This is also the license chosen for this repository.
 Please let me know if you have issues or require more explicit citations about reused source code.
 
+I wrote a short article (in french) about how (and why) I used this repository to spoof data on Flightradar24 on the 11th of March 2022:
+https://www.linkedin.com/pulse/comment-et-pourquoi-jai-tromp%25C3%25A9-flightradar24-mathieu-peyr%25C3%25A9ga/?trackingId=%2BGNCsBDoBSYuF8W3JPNclw%3D%3D
+
 ## Project goals
 
 The initial project goals are oriented towards:
@@ -79,7 +82,7 @@ mathieu@devbox:~/Dev/matioupi/realtime-adsb-out$ ./realtime-adsb-out.py -h
 Usage: ./realtime-adsb-out.py [options]
 
 -h | --help              Display help message.
---scenario <opt>          Scenario mode with a provided scenario filepath
+--scenario <opt>         Scenario mode with a provided scenario filepath
 --icao <opt>             Callsign in hex, Default:0x508035
 --callsign <opt>         Callsign (8 chars max), Default:DEADBEEF
 --squawk <opt>           4-digits 4096 code squawk, Default:7000
@@ -122,7 +125,7 @@ produce a large numer of tracks in a given area
 
 ![random mode example image](./images/adsb-out-random.png "random mode example")
 
-#### *More complex scenarii with multiple planes can be achieved though json configuration files*  
+#### *More complex scenarii with multiple planes can be achieved through json configuration files*  
 
 `./realtime-adsb-out.py --scenario ./examples/scenario3.json`  
   
