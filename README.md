@@ -26,13 +26,8 @@ The initial project goals are oriented towards:
 
 ## HackRF python wrapper
 
-HackRF python wrapper `pyhackrf.py` is included in this repository but is also proposed to be merged into hackRF main repository: https://github.com/greatscottgadgets/hackrf/pull/1058  
-If the pull request get accepted, file `pyhackrf.py` will be removed from this repo.  
-This repo only uses TX feature of the python wrapper, but RX is also possible (see examples in the PR)
-
-At time of writting this guide, I also believe there is a regression in `libhackrf` which should be solved by PR: https://github.com/greatscottgadgets/hackrf/pull/1057  
-This is still under review from greatscottgadgets maintainers but code in this repo is tested with the PR included.  
-I have not tested it with older/officiel releases of hackrf drivers/dev lib versions.
+HackRF python wrapper `pyhackrf.py` is included in this repository and was also proposed to be merged into hackRF main repository: https://github.com/greatscottgadgets/hackrf/pull/1058 but this has not been accepted. I'll try to keep maintaining it if API of libhackrf change and may think to build a proper independant Python package.
+This repo only uses TX feature of the python wrapper, but RX is also possible (see examples in https://github.com/Matioupi/hackrf/tree/python_wrapper/host/python)
 
 ## Software architecture
 
