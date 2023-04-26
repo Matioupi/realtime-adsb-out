@@ -2,6 +2,12 @@
     "plane1":
     {
         "filename":"./examples/MRYIA.json",
-        "trajectory_type":"circle"
+        "trajectory_type":"waypoints",
+        "waypoints_file":"waypoints.txt"
+    },
+    "plane2":
+    {
+        "filename":"./examples/AN-IL78MP.json",
+        "trajectory_type":"fixed"
     }
 }

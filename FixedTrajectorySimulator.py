@@ -17,8 +17,8 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 from AbstractTrajectorySimulatorBase import AbstractTrajectorySimulatorBase
 
 class FixedTrajectorySimulator(AbstractTrajectorySimulatorBase):
-    def __init__(self,mutex,broadcast_thread,aircrafinfos):
-        super().__init__(mutex,broadcast_thread,aircrafinfos)
+    def __init__(self,mutex,broadcast_thread,aircrafinfos,waypoints_file=None):
+        super().__init__(mutex,broadcast_thread,aircrafinfos,waypoints_file=None)
 
     def refresh_delay(self):
         return 0.05
