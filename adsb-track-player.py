@@ -165,7 +165,7 @@ def main():
 
     broadcast_thread.start()
 
-    # user input loop. TODO: Implement other commands? (in that case don't forget to check if mutex protection is needed)
+    # user input loop. Todo : implement other commands? (in that case don't forget to check if mutex protection is needed)
     while(val:=input("") != 's'):
         time.sleep(0.05)
 

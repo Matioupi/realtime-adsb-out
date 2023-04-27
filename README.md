@@ -6,7 +6,7 @@ This project is a highly modified fork of:
 
 https://github.com/Matioupi/realtime-adsb-out
 
-It is thus important to read the README of the this project.
+It is thus important to read the README of that project.
 
 As such, it draws inspiration and some code from all repositories referenced in that original project:
     https://github.com/lyusupov/ADSB-Out

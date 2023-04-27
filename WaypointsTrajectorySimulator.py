@@ -1,4 +1,4 @@
-""" implementation of a trajectory simulation where the simulated aircraft
+""" Implementation of a trajectory simulation where the simulated aircraft
 is following a preplanned trajectory
 
 mutex protection occurs when calling replace_message
@@ -36,11 +36,11 @@ class WaypointsTrajectorySimulator(AbstractTrajectorySimulatorBase):
 	    # Line format: "<0:lat> <1:lon> <2:alt> <3:speed> <4:track angle> <5:iterate time>"
             for line in wp:
                 posi = line.split()
-                print("[!] Setting "+self._aircraftinfos.callsign+"'s data")
-                print("    [:] Lat: "+posi[0]+" | Long: "+posi[1]+" | Alt: "+posi[2]+" | Speed: "+posi[3]+" | Trk Angle: "+posi[4]+" | ValidTime: "+posi[5])
+                print("[!] WAYPOINTS TRAJECTORY\tCallsign: "+self._aircraftinfos.callsign)
+                print("    [:] Lat: "+posi[0]+" | Lon: "+posi[1]+" | Alt: "+posi[2]+" | Spd: "+posi[3]+" | Trk Angle: "+posi[4]+" | ValidTime: "+posi[5])
                 self._aircraftinfos.lat_deg = float(posi[0])
                 self._aircraftinfos.lon_deg = float(posi[1])
                 self._aircraftinfos.alt_msl_m  = float(posi[2])
                 self._aircraftinfos.speed_mps = float(posi[3])
                 self._aircraftinfos.track_angle_deg = float(posi[4]) #valid: 0.0-360.0
-                time.sleep(int(posi[5])) #int, in seconds
+                time.sleep(int(posi[5])) #int, in seconds		# TODO: Currently iterates whole file before user-quit takes effect

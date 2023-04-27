@@ -1,4 +1,4 @@
-""" simplest implementation of a trajectory simulation where the simulated
+""" Simplest implementation of a trajectory simulation where the simulated
 aircraft is steady at the provided position
 
 mutex protection occurs when calling replace_message
@@ -21,7 +21,8 @@ class FixedTrajectorySimulator(AbstractTrajectorySimulatorBase):
         super().__init__(mutex,broadcast_thread,aircrafinfos,waypoints_file=None)
 
     def refresh_delay(self):
-        return 0.05
+        return 0.5
 
     def update_aircraftinfos(self):
-        pass
+        print("[!] FIXED TRAJECTORY\t\tCallsign: "+self._aircraftinfos.callsign)
+        print("    [:] Lat: "+str(self._aircraftinfos.lat_deg)+" | Lon: "+str(self._aircraftinfos.lon_deg)+" | Alt: "+str(self._aircraftinfos.alt_msl_m)+" | Spd: "+str(self._aircraftinfos.speed_mps)+" | Trk Angle: "+str(self._aircraftinfos.track_angle_deg))
