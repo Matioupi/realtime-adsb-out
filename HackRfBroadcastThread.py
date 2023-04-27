@@ -65,7 +65,6 @@ class HackRfBroadcastThread(threading.Thread):
 
         self._messages_feed_threads = {}
 
-
         # Initialize pyHackRF library
         result = HackRF.initialize()
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
@@ -79,37 +78,37 @@ class HackRfBroadcastThread(threading.Thread):
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
             
-        #result = self._hackrf_broadcaster.setAmplifierMode(LibHackRfHwMode.HW_MODE_ON)	# LNA Amplifier ON or OFF
-        #if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-        #    print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+        self._hackrf_broadcaster.setCrystalPPM(0)
+            
+        # 2MHz sample rate to meet ADS-B spec of 0.5µs PPM symbol
+        result = self._hackrf_broadcaster.setSampleRate(2000000)
+        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+            
+        result = self._hackrf_broadcaster.setBasebandFilterBandwidth(HackRF.computeBaseBandFilterBw(2000000))
+        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+            
+        #result = self.hackrf_broadcaster.setFrequency(868000000)			# 868MHz = Free frequency for over the air broadcast tests
+        result = self._hackrf_broadcaster.setFrequency(1090000000)			# Actual 1090MHz setting
+        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+            
+        result = self._hackrf_broadcaster.setTXVGAGain(40)				# TX VGA Gain (4 for wire feed + attenuators, 40 for wireless)
+        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))  
+            
+        result = self._hackrf_broadcaster.setAmplifierMode(LibHackRfHwMode.HW_MODE_ON)	# LNA Amplifier ON or OFF
+        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
             
         #result = self._hackrf_broadcaster.setLNAGain(10)				# LNA Amplifier Gain
         #if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
         #    print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
 
-        result = self._hackrf_broadcaster.setAntennaPowerMode(LibHackRfHwMode.HW_MODE_ON) # Antenna Power Mode ON or OFF
-        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-
-        self._hackrf_broadcaster.setCrystalPPM(0)
-        
-        # 2MHz sample rate to meet ADS-B spec of 0.5µs PPM symbol
-        result = self._hackrf_broadcaster.setSampleRate(2000000)
-        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-
-        result = self._hackrf_broadcaster.setBasebandFilterBandwidth(HackRF.computeBaseBandFilterBw(2000000))
-        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-
-        #result = self.hackrf_broadcaster.setFrequency(868000000)			# 868MHz = Free frequency for over the air broadcast tests
-        result = self._hackrf_broadcaster.setFrequency(1090000000)			# Actual 1090MHz setting
-        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-
-        result = self._hackrf_broadcaster.setTXVGAGain(40)				# TX VGA Gain (4 for wire feed + attenuators, 40 for wireless)
-        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))           
+        #result = self._hackrf_broadcaster.setAntennaPowerMode(LibHackRfHwMode.HW_MODE_ON) # Antenna Power Mode ON or OFF
+        #if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+        #    print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
 
         self._tx_context = hackrf_tx_context()
 

@@ -51,7 +51,7 @@ Usage: ./adsb-track-player.py [options]
 --trajectorytype <opt>   Types of simulated trajectories:
                            fixed       : steady aircraft
                            waypoints   : fly long flight path
-                           Default:fixed
+                           Default: fixed
 --lat <opt>              Latitude for the plane in decimal degrees, Default: 50.44994
 --long <opt>             Longitude for the plane in decimal degrees. Default: 30.5211
 --altitude <opt>         Altitude in decimal feet, Default: 1500.0

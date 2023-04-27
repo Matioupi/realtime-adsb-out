@@ -36,7 +36,7 @@ def usage(msg=False):
     print("--trajectorytype <opt>   Types of simulated trajectories:")
     print("                           fixed       : steady aircraft")
     print("                           waypoints   : fly long flight path")
-    print("                           Default:fixed")
+    print("                           Default: fixed")
     print("--lat <opt>              Latitude for the plane in decimal degrees, Default: 50.44994")
     print("--long <opt>             Longitude for the plane in decimal degrees. Default: 30.5211")
     print("--altitude <opt>         Altitude in decimal feet, Default: 1500.0")
@@ -120,6 +120,7 @@ def main():
             elif opt in ('--posrate'):posrate = int(arg)
             else:usage("Unknown option %s\n" % opt)
     print ("\n==== ADS-B Track Player v0.1.2 | by six3oo | core by Matioupi ====\n")
+    
     track_simulators = []
     broadcast_thread = HackRfBroadcastThread(posrate) # posrate would usally be used with random mode to generate load of tracks
 
@@ -159,7 +160,7 @@ def main():
     while(val:=input("[*] Type \'s + Enter\' to start ADS-B transmission, and type \'s + Enter\' again to stop:\n") != 's'):
         time.sleep(0.05)
 
-    # start all threads
+    # START all threads
     for tsim in track_simulators:
         tsim.start()
 
@@ -169,7 +170,7 @@ def main():
     while(val:=input("") != 's'):
         time.sleep(0.05)
 
-    # stop all threads
+    # STOP all threads
     for tsim in track_simulators:
         tsim.stop()
         
