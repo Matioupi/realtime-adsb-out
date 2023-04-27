@@ -3,7 +3,7 @@
     {
         "filename":"./examples/MRYIA.json",
         "trajectory_type":"waypoints",
-        "waypoints_file":"waypoints.txt"
+        "waypoints_file":"./examples/waypoints.txt"
     },
     "plane2":
     {

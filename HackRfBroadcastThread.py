@@ -97,11 +97,11 @@ class HackRfBroadcastThread(threading.Thread):
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
 
-        result = self._hackrf_broadcaster.setTXVGAGain(4)            # week gain (used for wire feed + attenuators)
+        result = self._hackrf_broadcaster.setTXVGAGain(20)            # TX Gain (use 4 for wire feed + attenuators, ~20 for wireless)
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
 
-        result = self._hackrf_broadcaster.setAmplifierMode(LibHackRfHwMode.HW_MODE_OFF)
+        result = self._hackrf_broadcaster.setAmplifierMode(LibHackRfHwMode.HW_MODE_ON) # LNA Amplifier ON or OFF (OFF for wire feed, ON for wireless)
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))        
 
