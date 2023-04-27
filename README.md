@@ -23,16 +23,17 @@ As per the project 'realtime-adsb-out', the workflow is divided between 3 execut
 
 - Main thread wich performs all initializations and control user inputs (mainly start / stop simulation for now)
 - HackRF broadcasting thread which pump encoded messages and send them over the air with a predefined schedule
-- Trajectory simulation thread which feed brodcasting thread with encoded messages matching a real time simulated trajectory
+- Trajectory simulation thread which feeds the broadcasting thread with encoded messages matching a real time simulated trajectory
 
-The message encoding is splitted into mode S "frame encoding" and "low level encoding" which handles PPM modulation and conversion to hackRF IQ sample format. Software source code structure tries to reflect those 2 different layers.
+The message encoding is split into Mode S "frame encoding" and "low level encoding" which handles PPM modulation and conversion to HackRF IQ sample format. The source code structure tries to reflect these two layers.
 
 ## Modifications from 'realtime-adsb-out'
 
 - Waypoint trajectory simulation is implemented
 - Circle and Random trajectory simulations have been removed
-- Increased verbosity and updated usage print
-- HackRF configured for wireless transmission (Default: 1090MHz) [NOTE: It is illegal in most jurisdictions to transmit at 1090MHz!]
+- Increased verbosity
+- HackRF configured for wireless RF transmission (Default: 1090MHz)
+[NOTE: It is illegal in most jurisdictions to transmit at 1090MHz!]
 
 ## Command Line Examples
 
@@ -40,7 +41,7 @@ The message encoding is splitted into mode S "frame encoding" and "low level enc
 
 ```
 six3oo@computer:~/adsb-track-player$ ./adsb-track-player.py -h
-Usage: ./realtime-adsb-out.py [options]
+Usage: ./adsb-track-player.py [options]
 
 -h | --help              Display help message
 --scenario <opt>         Scenario mode, argument is scenario JSON filepath
