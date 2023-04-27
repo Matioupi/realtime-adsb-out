@@ -32,13 +32,14 @@ The message encoding is splitted into mode S "frame encoding" and "low level enc
 - Waypoint trajectory simulation is implemented
 - Circle and Random trajectory simulations have been removed
 - Increased verbosity and updated usage print
+- HackRF configured for wireless transmission (Default: 1090MHz) [NOTE: It is illegal in most jurisdictions to transmit at 1090MHz!]
 
 ## Command Line Examples
 
 #### *Command line switches can be displayed with*  
 
 ```
-six3oo@computer:~/realtime-adsb-out$ ./realtime-adsb-out.py -h
+six3oo@computer:~/adsb-track-player$ ./adsb-track-player.py -h
 Usage: ./realtime-adsb-out.py [options]
 
 -h | --help              Display help message
@@ -63,20 +64,19 @@ Usage: ./realtime-adsb-out.py [options]
 --sstatus <opt>          Surveillance status, Default: 0
 --nicsupplementb <opt>   NIC supplement-B, Default: 0
 --surface                Aircraft located on ground, Default: False
---waypoints <opt>        Waypoints file for waypoints trajectory, argument is .txt filepath
 --posrate <opt>          Position frame broadcast period in µs, Default: 150000
 
 ```
 
 #### *Single plane scenarios*  
 
-`./realtime-adsb-out.py --callsign 'TEST' --alt 4500 --speed 600 --trajectorytype fixed --maxloadfactor 1.03`
+`./adsb-track-player.py --callsign 'TEST' --alt 4500 --speed 600 --trajectorytype fixed --maxloadfactor 1.03`
 
 will generate a fixed trajectory, flown at 4500 ft, 600 km/h and a load factor of 1.03.
 
 #### *JSON scenarios with multiple planes*  
 
-`./realtime-adsb-out.py --scenario ./examples/scenario.json`  
+`./adsb-track-player.py --scenario ./examples/scenario.json`  
   
 ![4 planes scenario example](./images/adsb-out-scenario3.png "4 planes scenario example")
 
