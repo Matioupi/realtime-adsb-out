@@ -4,7 +4,7 @@
 
 This project is a highly modified fork of:
 
-https://github.com/Matioupi/realtime-adsb-out
+https://github.com/Matioupi/realtime-adsb-out (forked on 25 Apr 2023):
 
 It is thus important to read the README of that project.
 
@@ -21,8 +21,8 @@ Please let me know if you have issues or require more explicit citations about r
 
 As per the project 'realtime-adsb-out', the workflow is divided between 3 execution threads:
 
-- Main thread wich performs all initializations and control user inputs (mainly start / stop simulation for now)
-- HackRF broadcasting thread which pump encoded messages and send them over the air with a predefined schedule
+- Main thread which performs all initializations and control user inputs (mainly start / stop simulation for now)
+- HackRF broadcasting thread which pumps encoded messages and sends them over the air with a predefined schedule
 - Trajectory simulation thread which feeds the broadcasting thread with encoded messages matching a real time simulated trajectory
 
 The message encoding is split into Mode S "frame encoding" and "low level encoding" which handles PPM modulation and conversion to HackRF IQ sample format. The source code structure tries to reflect these two layers.
@@ -37,7 +37,7 @@ The message encoding is split into Mode S "frame encoding" and "low level encodi
 
 ## Command Line Examples
 
-#### *Command line switches can be displayed with*  
+#### *Command line switches (accessed with '-h')*  
 
 ```
 six3oo@computer:~/adsb-track-player$ ./adsb-track-player.py -h
