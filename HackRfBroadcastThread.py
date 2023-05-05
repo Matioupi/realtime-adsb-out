@@ -79,7 +79,15 @@ class HackRfBroadcastThread(threading.Thread):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
             
         self._hackrf_broadcaster.setCrystalPPM(0)
+
+        result = self._hackrf_broadcaster.setAmplifierMode(LibHackRfHwMode.HW_MODE_ON)	# Amplifier ON or OFF
+        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
             
+        result = self._hackrf_broadcaster.setLNAGain(14)				# LNA Amplifier Gain
+        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+                        
         # 2MHz sample rate to meet ADS-B spec of 0.5µs PPM symbol
         result = self._hackrf_broadcaster.setSampleRate(2000000)
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
@@ -94,22 +102,20 @@ class HackRfBroadcastThread(threading.Thread):
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
             
-        result = self._hackrf_broadcaster.setTXVGAGain(40)				# TX VGA Gain (4 for wire feed + attenuators, 40 for wireless)
+        result = self._hackrf_broadcaster.setTXVGAGain(47)				# TX VGA Gain (4 for wire feed + attenuators, 40 for wireless)
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))  
             
-        result = self._hackrf_broadcaster.setAmplifierMode(LibHackRfHwMode.HW_MODE_ON)	# LNA Amplifier ON or OFF
+        print("[*] HackRF Transciever Mode: "+str(self._hackrf_broadcaster.getTransceiverMode()))	# Get Transceiver Mode
+            
+        #print("[*] HackRF Transceiver Mode: "+str(self._hackrf_broadcaster.setTransceiverMode()))	# Set Transceiver Mode
+        #if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+        #    print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+          
+        result = self._hackrf_broadcaster.setAntennaPowerMode(LibHackRfHwMode.HW_MODE_ON) # Antenna Power Mode ON or OFF
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-            
-        #result = self._hackrf_broadcaster.setLNAGain(10)				# LNA Amplifier Gain
-        #if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-        #    print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-
-        #result = self._hackrf_broadcaster.setAntennaPowerMode(LibHackRfHwMode.HW_MODE_ON) # Antenna Power Mode ON or OFF
-        #if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-        #    print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-
+        
         self._tx_context = hackrf_tx_context()
 
         self._do_stop = False
@@ -175,10 +181,9 @@ class HackRfBroadcastThread(threading.Thread):
             self._mutex.release()
 
             result = self._hackrf_broadcaster.startTX(hackrfTXCB,self._tx_context)
-
             if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
                 print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-
+    
             while self._hackrf_broadcaster.isStreaming():
                 time.sleep(sleep_time)
 
@@ -205,7 +210,7 @@ class HackRfBroadcastThread(threading.Thread):
                     else:
                         remaining = -float('inf')
                         sleep_time = 0.0
-                    # Time throttling: messages are broadcasted only at provided time intervall
+                    # Time throttling: messages are broadcasted only at provided time interval
                     # TODO : Implement UTC syncing mechanism (requires that the actual host clock is UTC synced) ?
                     #        which may be implemented to some accuracy level with ntp or GPS + PPS mechanisms in Python ?
                     if (v[0] != None and len(v[0]) > 0) and remaining <= 0.0:
@@ -215,7 +220,7 @@ class HackRfBroadcastThread(threading.Thread):
                         remaining = math.fmod(remaining,v2_sec)
                         if remaining < sleep_time:
                             sleep_time = remaining
-
+                            
             #print("sleep_time1",sleep_time)
             bc_length = len(plane_messages)
             if (bc_length > 0):

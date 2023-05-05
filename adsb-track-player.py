@@ -119,7 +119,7 @@ def main():
             elif opt in ('--surface'):on_surface = True
             elif opt in ('--posrate'):posrate = int(arg)
             else:usage("Unknown option %s\n" % opt)
-    print ("\n==== ADS-B Track Player v0.1.2 | by six3oo | core by Matioupi ====\n")
+    print ("\n==== ADS-B Track Player v0.1.3 | by six3oo | core by Matioupi ====\n")
     
     track_simulators = []
     broadcast_thread = HackRfBroadcastThread(posrate) # posrate would usally be used with random mode to generate load of tracks
@@ -165,7 +165,6 @@ def main():
         tsim.start()
 
     broadcast_thread.start()
-
     # user input loop. Todo : implement other commands? (in that case don't forget to check if mutex protection is needed)
     while(val:=input("") != 's'):
         time.sleep(0.05)
