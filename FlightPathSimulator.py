@@ -28,7 +28,7 @@ class FlightPathSimulator(AbstractTrajectorySimulatorBase):
         self._max_speed_mps = aircrafinfos.speed_mps
 
     def refresh_delay(self):
-        return 0.005
+        return 0.2
 
     def update_aircraftinfos(self):
         
@@ -41,3 +41,6 @@ class FlightPathSimulator(AbstractTrajectorySimulatorBase):
 
         self._aircraftinfos.alt_msl_m = random.uniform(1.0,self._max_alt_m)
         self._aircraftinfos.speed_mps = random.uniform(0.0,self._max_speed_mps)
+        
+        print("[!] FLIGHT SIM\t\tCallsign: "+self._aircraftinfos.callsign)
+        print("    [:] Lat: "+str(self._aircraftinfos.lat_deg)+" | Lon: "+str(self._aircraftinfos.lon_deg)+" | Alt: "+str(self._aircraftinfos.alt_msl_m)+" | Spd: "+str(self._aircraftinfos.speed_mps)+" | Trk Angle: "+str(self._aircraftinfos.track_angle_deg))

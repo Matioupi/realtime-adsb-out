@@ -32,12 +32,12 @@ def usage(msg=False):
     print("[h] Usage: %s [options]\n" % sys.argv[0])
     print("-h | --help              Display help message")
     print("--scenario <opt>         Scenario mode, argument is scenario JSON filepath")
-    print("                           Waypoints   : Include waypoints.txt file in script directory")
+    print("                           waypoints   : Include waypoints.txt file in script directory")
     print("--icao <opt>             Callsign in hex, default: 0x508035")
     print("--callsign <opt>         Callsign (8 chars max), Default: DEADBEEF")
     print("--squawk <opt>           4-digit 4096 code squawk, Default: 7000")
     print("--trajectorytype <opt>   Types of simulated trajectories:")
-    print("                           fixed       : steady aircraft")
+    print("                           fixed       : fixed broadcast")
     print("                           flightsim   : dynamically generated flight path")
     print("                           Default: fixed")
     print("--lat <opt>              Latitude for the plane in decimal degrees, Default: 50.44994")
@@ -65,7 +65,7 @@ def getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,wayp
     elif trajectory_type == 'waypoints':
         return WaypointsTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,waypoints_file)
     elif trajectory_type == 'flightsim':
-    	return FlightPathSimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,scenariofile)
+    	return FlightPathSimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos)
     else:
         return None
 

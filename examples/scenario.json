@@ -9,5 +9,10 @@
     {
         "filename":"./examples/AN-IL78MP.json",
         "trajectory_type":"fixed"
+    },
+    "plane3":
+    {
+        "filename":"./examples/A400M-110.json",
+        "trajectory_type":"flightsim"
     }
 }
