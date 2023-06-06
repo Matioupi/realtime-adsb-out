@@ -15,12 +15,14 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import sys, time, math, os
+from os.path import exists
 import threading, json
 import traceback
 
 from AircraftInfos import AircraftInfos
 from FixedTrajectorySimulator import FixedTrajectorySimulator
 from WaypointsTrajectorySimulator import WaypointsTrajectorySimulator
+from FlightPathSimulator import FlightPathSimulator
 from HackRfBroadcastThread import HackRfBroadcastThread
 
 from getopt import getopt, GetoptError
@@ -30,12 +32,13 @@ def usage(msg=False):
     print("[h] Usage: %s [options]\n" % sys.argv[0])
     print("-h | --help              Display help message")
     print("--scenario <opt>         Scenario mode, argument is scenario JSON filepath")
+    print("                           Waypoints   : Include waypoints.txt file in script directory")
     print("--icao <opt>             Callsign in hex, default: 0x508035")
     print("--callsign <opt>         Callsign (8 chars max), Default: DEADBEEF")
     print("--squawk <opt>           4-digit 4096 code squawk, Default: 7000")
     print("--trajectorytype <opt>   Types of simulated trajectories:")
     print("                           fixed       : steady aircraft")
-    print("                           waypoints   : fly long flight path")
+    print("                           flightsim   : dynamically generated flight path")
     print("                           Default: fixed")
     print("--lat <opt>              Latitude for the plane in decimal degrees, Default: 50.44994")
     print("--long <opt>             Longitude for the plane in decimal degrees. Default: 30.5211")
@@ -61,6 +64,8 @@ def getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,wayp
         return FixedTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos)  
     elif trajectory_type == 'waypoints':
         return WaypointsTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,waypoints_file)
+    elif trajectory_type == 'flightsim':
+    	return FlightPathSimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,scenariofile)
     else:
         return None
 
@@ -119,7 +124,7 @@ def main():
             elif opt in ('--surface'):on_surface = True
             elif opt in ('--posrate'):posrate = int(arg)
             else:usage("Unknown option %s\n" % opt)
-    print ("\n==== ADS-B Track Player v0.1.3 | by six3oo | core by Matioupi ====\n")
+    print ("\n==== ADS-B Track Player v0.2.0 | by six3oo | core by Matioupi ====\n")
     
     track_simulators = []
     broadcast_thread = HackRfBroadcastThread(posrate) # posrate would usally be used with random mode to generate load of tracks
@@ -138,16 +143,15 @@ def main():
         print("[*] JSON Scenario mode: "+os.path.abspath(scenariofile))
         with open(scenariofile,'r') as json_file:
             scenario = json.load(json_file)
-
+        
+        if exists("waypoints.txt"):
+           waypoints_file = "waypoints.txt"                
+           print("[!] Waypoints file detected: " +os.path.abspath(waypoints_file))
+        
         for plane in scenario.values():
             plane_info = AircraftInfos.from_json(plane["filename"])
-
-            if "waypoints_file" in plane:
-                waypoints_file = plane["waypoints_file"]
-                print("[!] Waypoints file detected: " +os.path.abspath(waypoints_file))
-
+                
             track_simulation = getTrackSimulationThread(plane["trajectory_type"],broadcast_thread,plane_info,waypoints_file)
-
             track_simulators.append(track_simulation)
 
         print("[*] Scenario contains track simulation instructions for "+str(len(track_simulators))+" plane(s):")
