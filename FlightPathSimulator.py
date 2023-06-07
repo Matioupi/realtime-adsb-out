@@ -60,8 +60,8 @@ class FlightPathSimulator(AbstractTrajectorySimulatorBase):
         
         self._aircraftinfos.lat_deg, self._aircraftinfos.lon_deg = get_point_at_distance(self._aircraftinfos.lat_deg, self._aircraftinfos.lon_deg, dist_spd, self._aircraftinfos.track_angle_deg)
 
-        self._aircraftinfos.speed_mps += random.uniform(-5,5)
-        self._aircraftinfos.track_angle_deg += random.uniform(-4,4)
+        self._aircraftinfos.speed_mps += random.uniform(-10,10)
+        self._aircraftinfos.track_angle_deg += random.uniform(-3,3)
         self._aircraftinfos.alt_msl_m += random.uniform(-5,5)
         
         # Track angle 0-360 wrapping

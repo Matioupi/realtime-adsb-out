@@ -55,6 +55,7 @@ def usage(msg=False):
     print("--nicsupplementb <opt>   NIC supplement-B, Default: 0")
     print("--surface                Aircraft located on ground, Default: False")
     print("--posrate <opt>          Position frame broadcast period in µs, Default: 150000")
+    print("--numac <opt>            Number of aircraft to simulate, Default: 1")
     print("")
     #print("see usage.md for additionnal information")
 

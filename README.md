@@ -45,13 +45,14 @@ Usage: ./adsb-track-player.py [options]
 
 -h | --help              Display help message
 --scenario <opt>         Scenario mode, argument is scenario JSON filepath
+                             waypoints   : Include waypoints.txt file in script directory
 --icao <opt>             Callsign in hex, default: 0x508035
 --callsign <opt>         Callsign (8 chars max), Default: DEADBEEF
 --squawk <opt>           4-digit 4096 code squawk, Default: 7000
 --trajectorytype <opt>   Types of simulated trajectories:
-                           fixed       : steady aircraft
-                           waypoints   : fly long flight path
-                           Default: fixed
+                             fixed       : fixed broadcast
+                             flightsim   : dynamically generated flight path
+                             Default: fixed
 --lat <opt>              Latitude for the plane in decimal degrees, Default: 50.44994
 --long <opt>             Longitude for the plane in decimal degrees. Default: 30.5211
 --altitude <opt>         Altitude in decimal feet, Default: 1500.0
@@ -66,6 +67,7 @@ Usage: ./adsb-track-player.py [options]
 --nicsupplementb <opt>   NIC supplement-B, Default: 0
 --surface                Aircraft located on ground, Default: False
 --posrate <opt>          Position frame broadcast period in µs, Default: 150000
+--numac <opt>            Number of aircraft to simulate, Default: 1
 
 ```
 
@@ -75,9 +77,20 @@ Usage: ./adsb-track-player.py [options]
 
 will generate a fixed trajectory, flown at 4500 ft, 600 km/h and a load factor of 1.03.
 
+#### *Flight path track generation with multiple planes*
+
+`./adsb-track-player.py --numac 20 --trajectorytype flightsim`
+
+will generate 20 trajectories starting from the default ADS-B frame, slowly fuzzing out in the same general direction.
+
+Current fuzzing settings are 5 seconds between transmits, and a randomized modifier is applied as follows with each transmit:
++/- 10 knots for speed
++/- 5 feet for altitude
++/- 3 degrees for track angle
+
 #### *JSON scenarios with multiple planes*  
 
-`./adsb-track-player.py --scenario ./examples/scenario.json`  
+`./adsb-track-player.py --scenario scenario.json`  
   
 ![4 planes scenario example](./images/adsb-out-scenario3.png "4 planes scenario example")
 
