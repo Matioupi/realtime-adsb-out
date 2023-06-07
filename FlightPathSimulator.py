@@ -1,5 +1,7 @@
-""" simplest implementation of a trajectory simulation where the simulated
-aircraft is randomly distributed inside a circle
+""" Dynamically generates a randomized conical flight path from initial values
+read from scenario file
+
+-------------------------------------------------------
 mutex protection occurs when calling replace_message
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -46,23 +48,27 @@ class FlightPathSimulator(AbstractTrajectorySimulatorBase):
         self._lat0 = aircraftinfos.lat_deg
         self._lon0 = aircraftinfos.lon_deg
 
-        self._max_alt_m = aircraftinfos.alt_msl_m
-        self._max_speed_mps = aircraftinfos.speed_mps
+        self._alt_m = aircraftinfos.alt_msl_m
+        self._speed_mps = aircraftinfos.speed_mps
 
     def refresh_delay(self):
         return REFRESH_RATE
 
-
-
     def update_aircraftinfos(self):
         
-        dist_spd = ((self._max_speed_mps * 1.852)/3600)*REFRESH_RATE
+        dist_spd = ((self._speed_mps * 1.852)/3600)*REFRESH_RATE
         
         self._aircraftinfos.lat_deg, self._aircraftinfos.lon_deg = get_point_at_distance(self._aircraftinfos.lat_deg, self._aircraftinfos.lon_deg, dist_spd, self._aircraftinfos.track_angle_deg)
 
-        #self._aircraftinfos.alt_msl_m = random.uniform(1.0,self._max_alt_m)
         self._aircraftinfos.speed_mps += random.uniform(-5,5)
         self._aircraftinfos.track_angle_deg += random.uniform(-4,4)
+        self._aircraftinfos.alt_msl_m += random.uniform(-5,5)
+        
+        # Track angle 0-360 wrapping
+        if self._aircraftinfos.track_angle_deg < 0:
+            self._aircraftinfos.track_angle_deg += 360
+        elif self._aircraftinfos.track_angle_deg > 360:
+            self._aircraftinfos.track_angle_deg -= 360
         
         print("[!] FLIGHT SIM\t\tCallsign: "+self._aircraftinfos.callsign)
         print("    [:] Lat: "+str(self._aircraftinfos.lat_deg)+" | Lon: "+str(self._aircraftinfos.lon_deg)+" | Alt: "+str(self._aircraftinfos.alt_msl_m)+" | Spd: "+str(self._aircraftinfos.speed_mps)+" | Trk Angle: "+str(self._aircraftinfos.track_angle_deg))

@@ -18,6 +18,7 @@ import sys, time, math, os
 from os.path import exists
 import threading, json
 import traceback
+from tkinter import *
 
 from AircraftInfos import AircraftInfos
 from FixedTrajectorySimulator import FixedTrajectorySimulator
@@ -70,6 +71,25 @@ def getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,wayp
         return None
 
 def main():
+    """
+    # GUI initialization
+    master = Tk()
+    master.title('ADS-B Track Player by six3oo')
+    intro = Label(master,text='Transmit ADS-B frames!')
+    intro.pack()
+    frame = Frame(master)
+    frame.pack()
+    bottomFrame = Frame(master)
+    bottomFrame.pack(side=BOTTOM)
+    fixedButton = Button(frame,text='Fixed',fg='red')
+    fixedButton.pack(side=LEFT)
+    flightSimButton = Button(frame,text='Flight Sim',fg='blue')
+    flightSimButton.pack(side=LEFT)
+    helpButton = Button(frame,text='Help',fg='black')
+    helpButton.pack(side=LEFT)
+    yeetButton = Button(frame,text='Yeet',fg='red')
+    yeetButton.pack(side=LEFT)
+    """
 
     # Default values
     icao_aa = '0x508035'
@@ -93,10 +113,11 @@ def main():
     posrate = 150000
     scenariofile = None
     waypoints_file = None
+    numac=1
     try:
         (opts, args) = getopt(sys.argv[1:], 'h', \
             ['help','scenario=','icao=','callsign=','squawk=','trajectorytype=','lat=','long=','altitude=','speed=','vspeed=','maxloadfactor=','trackangle=',
-            'timesync=','capability=','typecode=','sstatus=','nicsupplementb=','surface','posrate='
+            'timesync=','capability=','typecode=','sstatus=','nicsupplementb=','surface','posrate=','numac='
             ])
     except GetoptError as err:
         usage("%s\n" % err)
@@ -123,20 +144,30 @@ def main():
             elif opt in ('--nicsupplementb'):nicsup = int(arg)
             elif opt in ('--surface'):on_surface = True
             elif opt in ('--posrate'):posrate = int(arg)
+            elif opt in ('--numac'):numac = int(arg)
             else:usage("Unknown option %s\n" % opt)
-    print ("\n==== ADS-B Track Player v0.2.0 | by six3oo | core by Matioupi ====\n")
+    print ("\n==== ADS-B Track Player v0.2.2 | by six3oo | core by Matioupi ====\n")
     
+    # GUI runtime
+    #master.mainloop()
+    
+    # Functional code
     track_simulators = []
     broadcast_thread = HackRfBroadcastThread(posrate) # posrate would usally be used with random mode to generate load of tracks
 
     # Scenario file presence check
     if scenariofile == None:
-        print("[*] Single plane CLI mode")
+        print("[*] CLI mode")
         aircraftinfos = AircraftInfos(icao_aa,callsign,squawk, \
                                     lat_deg,lon_deg,alt_ft,speed_kph,vspeed_ftpmin,maxloadfactor,track_angle_deg, \
                                     timesync,capability,type_code,surveillance_status,nicsup,on_surface)
-        track_simulation = getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file)
-        track_simulators.append(track_simulation)
+        
+        if numac>1:
+            print("[!] Generating "+str(numac)+" fuzzing aircraft")
+        
+        for i in range(numac):
+            track_simulation = getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file)
+            track_simulators.append(track_simulation)
     
     # Scenario file parsing
     else:
