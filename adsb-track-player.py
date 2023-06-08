@@ -96,10 +96,10 @@ def main():
     icao_aa = '0x508035'
     callsign = 'DEADBEEF'
     squawk = '7000'
-    alt_ft  = 1500.0
-    lat_deg = 50.44994
-    lon_deg = 30.5211
-    speed_kph = 300.0
+    alt_ft  = 2000.0
+    lat_deg = 1.3521
+    lon_deg = 103.8198
+    speed_kph = 500.0
     vspeed_ftpmin = 0.0
     maxloadfactor = 1.45
     track_angle_deg = 0.0
@@ -186,14 +186,14 @@ def main():
             track_simulation = getTrackSimulationThread(plane["trajectory_type"],broadcast_thread,plane_info,waypoints_file)
             track_simulators.append(track_simulation)
 
-        print("[*] Scenario contains track simulation instructions for "+str(len(track_simulators))+" plane(s):")
+        print("[*] Scenario contains track simulations for "+str(len(track_simulators))+" plane(s):")
         for tsim in track_simulators:
-            print("    [:] Callsign: "+tsim.aircraftinfos.callsign.ljust(9,' ')+"MSL altitude: "+"{:7.1f}".format(tsim.aircraftinfos.alt_msl_ft)+" ft")
-
+            print("    [:] Callsign: "+tsim.aircraftinfos.callsign.ljust(9,' ')+"MSL altitude: "+"{:7.1f}".format(tsim.aircraftinfos.alt_msl_ft)+" ft\t| Thread: "+str(tsim))
+            
     for tsim in track_simulators:
         broadcast_thread.register_track_simulation_thread(tsim)
 
-    while(val:=input("[*] Type \'s + Enter\' to start ADS-B transmission, and type \'s + Enter\' again to stop:\n") != 's'):
+    while(val:=input("[*] Type \'s + Enter\' to start ADS-B transmission, and type \'s + Enter\' again to stop: ") != 's'):
         time.sleep(0.05)
 
     # START all threads

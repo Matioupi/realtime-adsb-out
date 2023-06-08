@@ -84,7 +84,7 @@ will generate a fixed trajectory, flown at 4500 ft, 600 km/h and a load factor o
 will generate 20 trajectories starting from the default ADS-B frame, slowly fuzzing out in the same general direction.
 
 Current fuzzing settings are 5 seconds between transmits, and a randomized modifier is applied as follows with each transmit:
-+/- 10 knots for speed
++/- 10 km/h for speed
 +/- 5 feet for altitude
 +/- 3 degrees for track angle
 
