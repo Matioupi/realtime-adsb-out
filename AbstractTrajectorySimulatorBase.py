@@ -34,6 +34,7 @@ class AbstractTrajectorySimulatorBase(threading.Thread,abc.ABC):
         self._broadcast_thread = broadcast_thread
         self._aircraftinfos = aircraftinfos
         self._waypoints_file = waypoints_file
+        self._logfile = logfile
 
         self._modeSencoder = ModeS(df=17,icao=self._aircraftinfos.icao,ca=self._aircraftinfos.capability)
 

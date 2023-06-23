@@ -13,13 +13,13 @@ FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with
 this program. If not, see <http://www.gnu.org/licenses/>.
 """
-import datetime
+from datetime import datetime
 
 from AbstractTrajectorySimulatorBase import AbstractTrajectorySimulatorBase
 
 class FixedTrajectorySimulator(AbstractTrajectorySimulatorBase):
-    def __init__(self,mutex,broadcast_thread,aircraftinfos,waypoints_file=None,logfile):
-        super().__init__(mutex,broadcast_thread,aircraftinfos,waypoints_file=None,logfile)
+    def __init__(self,mutex,broadcast_thread,aircraftinfos,waypoints_file,logfile):
+        super().__init__(mutex,broadcast_thread,aircraftinfos,waypoints_file,logfile)
 
     def refresh_delay(self):
         return 0.5
@@ -29,4 +29,6 @@ class FixedTrajectorySimulator(AbstractTrajectorySimulatorBase):
         print("    [:] Lat: "+str(self._aircraftinfos.lat_deg)+" | Lon: "+str(self._aircraftinfos.lon_deg)+" | Alt: "+str(self._aircraftinfos.alt_msl_m)+" | Spd: "+str(self._aircraftinfos.speed_mps)+" | Trk Angle: "+str(self._aircraftinfos.track_angle_deg))
         
         # Write to logfile -> CSV format: DATETIME,CALLSIGN,LAT,LONG,ALT,SPD,TRKANGLE
-        logfile.write(datetime.now()+","+self._aircraftinfos.callsign+","+str(self._aircraftinfos.lat_deg)+","+str(self._aircraftinfos.lon_deg)+","+str(self._aircraftinfos.alt_msl_m)+","+str(self._aircraftinfos.speed_mps)+","+str(self._aircraftinfos.track_angle_deg))
+        with open(self._logfile,"a") as fLog:
+            now=str(datetime.now())
+            fLog.write("\n"+now+","+self._aircraftinfos.callsign+","+str(self._aircraftinfos.lat_deg)+","+str(self._aircraftinfos.lon_deg)+","+str(self._aircraftinfos.alt_msl_m)+","+str(self._aircraftinfos.speed_mps)+","+str(self._aircraftinfos.track_angle_deg))

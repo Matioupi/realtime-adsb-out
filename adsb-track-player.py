@@ -63,27 +63,30 @@ def usage(msg=False):
 ############ TRACK SIMULATION GENERATION FUNCTION ############
 def getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file,logfile):
     if trajectory_type == 'fixed':
-        return FixedTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos)  
+        return FixedTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,waypoints_file,logfile)  
     elif trajectory_type == 'waypoints':
-        return WaypointsTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,waypoints_file)
+        return WaypointsTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,waypoints_file,logfile)
     elif trajectory_type == 'flightsim':
-    	return FlightPathSimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos)
+    	return FlightPathSimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,logfile)
     else:
         return None
 
 ############ MAIN FUNCTION ############
 def main():
 
-    logfile = r'logfile.csv'
+    # Log file check
+    logfile = './logfile.csv'
     if os.path.exists(logfile):
         if os.path.isfile(logfile):
-            fLog = open(logfile,"w")
+            print("[*] logfile.csv found")
         elif os.path.isdir(logfile):
             print("[!] logfile is a directory, not a file!")
     else:
-    print("[!] logfile not found, creating...")
-    fLog = open(logfile, "w")
-
+        print("[!] logfile not found, creating...")
+        with open(logfile,"w") as fLog:
+            fLog.write("DATETIME,CALLSIGN,LAT,LONG,ALT,SPD,TRKANGLE")
+        fLog.close()
+        
     # Default values
     icao_aa = '0x508035'
     callsign = 'DEADBEEF'
@@ -159,8 +162,10 @@ def main():
             print("[!] Generating "+str(numac)+" fuzzing aircraft")
         
         for i in range(numac):
-            track_simulation = getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file,logfile)
-            track_simulators.append(track_simulation)
+        # TRACK SIMULATION CREATION
+
+                track_simulation = getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file,logfile)
+                track_simulators.append(track_simulation)
     
     # Scenario file parsing
     else:
@@ -174,7 +179,7 @@ def main():
         
         for plane in scenario.values():
             plane_info = AircraftInfos.from_json(plane["filename"])
-                
+            # TRACK SIMULATION CREATION
             track_simulation = getTrackSimulationThread(plane["trajectory_type"],broadcast_thread,plane_info,waypoints_file,logfile)
             track_simulators.append(track_simulation)
 
@@ -201,9 +206,6 @@ def main():
     for tsim in track_simulators:
         tsim.stop()
     
-    # CLOSE LOGFILE
-    logfile.close()
-        
     broadcast_thread.stop()
 
     # wait for all threads to terminate

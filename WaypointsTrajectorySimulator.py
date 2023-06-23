@@ -40,7 +40,9 @@ class WaypointsTrajectorySimulator(AbstractTrajectorySimulatorBase):
                 print("    [:] Lat: "+posi[0]+" | Lon: "+posi[1]+" | Alt: "+posi[2]+" | Spd: "+posi[3]+" | Trk Angle: "+posi[4]+" | ValidTime: "+posi[5])
                 
                 # Write to logfile -> CSV format: DATETIME,CALLSIGN,LAT,LONG,ALT,SPD,TRKANGLE
-                logfile.write(datetime.now()+","+self._aircraftinfos.callsign+","+posi[0]+","+posi[1]+","+posi[2]+","+posi[3]+","+posi[4])
+                now=str(datetime.now())
+                with open(self._logfile,"a") as fLog:
+                    fLog.write.write("\n"+now+","+self._aircraftinfos.callsign+","+posi[0]+","+posi[1]+","+posi[2]+","+posi[3]+","+posi[4])
                 
                 
                 self._aircraftinfos.lat_deg = float(posi[0])
