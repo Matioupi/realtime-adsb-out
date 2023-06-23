@@ -18,7 +18,6 @@ import sys, time, math, os
 from os.path import exists
 import threading, json
 import traceback
-from tkinter import *
 
 from AircraftInfos import AircraftInfos
 from FixedTrajectorySimulator import FixedTrajectorySimulator
@@ -61,7 +60,8 @@ def usage(msg=False):
 
     sys.exit(2)
 
-def getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file):
+############ TRACK SIMULATION GENERATION FUNCTION ############
+def getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file,logfile):
     if trajectory_type == 'fixed':
         return FixedTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos)  
     elif trajectory_type == 'waypoints':
@@ -71,26 +71,18 @@ def getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,wayp
     else:
         return None
 
+############ MAIN FUNCTION ############
 def main():
-    """
-    # GUI initialization
-    master = Tk()
-    master.title('ADS-B Track Player by six3oo')
-    intro = Label(master,text='Transmit ADS-B frames!')
-    intro.pack()
-    frame = Frame(master)
-    frame.pack()
-    bottomFrame = Frame(master)
-    bottomFrame.pack(side=BOTTOM)
-    fixedButton = Button(frame,text='Fixed',fg='red')
-    fixedButton.pack(side=LEFT)
-    flightSimButton = Button(frame,text='Flight Sim',fg='blue')
-    flightSimButton.pack(side=LEFT)
-    helpButton = Button(frame,text='Help',fg='black')
-    helpButton.pack(side=LEFT)
-    yeetButton = Button(frame,text='Yeet',fg='red')
-    yeetButton.pack(side=LEFT)
-    """
+
+    logfile = r'logfile.csv'
+    if os.path.exists(logfile):
+        if os.path.isfile(logfile):
+            fLog = open(logfile,"w")
+        elif os.path.isdir(logfile):
+            print("[!] logfile is a directory, not a file!")
+    else:
+    print("[!] logfile not found, creating...")
+    fLog = open(logfile, "w")
 
     # Default values
     icao_aa = '0x508035'
@@ -167,7 +159,7 @@ def main():
             print("[!] Generating "+str(numac)+" fuzzing aircraft")
         
         for i in range(numac):
-            track_simulation = getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file)
+            track_simulation = getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file,logfile)
             track_simulators.append(track_simulation)
     
     # Scenario file parsing
@@ -183,7 +175,7 @@ def main():
         for plane in scenario.values():
             plane_info = AircraftInfos.from_json(plane["filename"])
                 
-            track_simulation = getTrackSimulationThread(plane["trajectory_type"],broadcast_thread,plane_info,waypoints_file)
+            track_simulation = getTrackSimulationThread(plane["trajectory_type"],broadcast_thread,plane_info,waypoints_file,logfile)
             track_simulators.append(track_simulation)
 
         print("[*] Scenario contains track simulations for "+str(len(track_simulators))+" plane(s):")
@@ -208,6 +200,9 @@ def main():
     # STOP all threads
     for tsim in track_simulators:
         tsim.stop()
+    
+    # CLOSE LOGFILE
+    logfile.close()
         
     broadcast_thread.stop()
 

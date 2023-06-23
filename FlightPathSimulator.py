@@ -41,8 +41,8 @@ def get_point_at_distance(lat1, lon1, d, bearing, R=6371):
     return (degrees(lat2), degrees(lon2),)
 
 class FlightPathSimulator(AbstractTrajectorySimulatorBase):
-    def __init__(self,mutex,broadcast_thread,aircraftinfos):
-        super().__init__(mutex,broadcast_thread,aircraftinfos)
+    def __init__(self,mutex,broadcast_thread,aircraftinfos,logfile):
+        super().__init__(mutex,broadcast_thread,aircraftinfos,logfile)
         self._starttime = datetime.datetime.now(datetime.timezone.utc)
         
         self._lat0 = aircraftinfos.lat_deg
@@ -72,3 +72,6 @@ class FlightPathSimulator(AbstractTrajectorySimulatorBase):
         
         print("[!] FLIGHT SIM\t\tCallsign: "+self._aircraftinfos.callsign)
         print("    [:] Lat: "+str(self._aircraftinfos.lat_deg)+" | Lon: "+str(self._aircraftinfos.lon_deg)+" | Alt: "+str(self._aircraftinfos.alt_msl_m)+" | Spd: "+str(self._aircraftinfos.speed_mps)+" | Trk Angle: "+str(self._aircraftinfos.track_angle_deg))
+        
+        # Write to logfile -> CSV format: DATETIME,CALLSIGN,LAT,LONG,ALT,SPD,TRKANGLE
+        logfile.write(datetime.now()+","+self._aircraftinfos.callsign+","+str(self._aircraftinfos.lat_deg)+","+str(self._aircraftinfos.lon_deg)+","+str(self._aircraftinfos.alt_msl_m)+","+str(self._aircraftinfos.speed_mps)+","+str(self._aircraftinfos.track_angle_deg))

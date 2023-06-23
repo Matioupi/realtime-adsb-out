@@ -28,7 +28,7 @@ from CustomDecorators import *
 from ModeS import ModeS
 
 class AbstractTrajectorySimulatorBase(threading.Thread,abc.ABC):
-    def __init__(self,mutex,broadcast_thread,aircraftinfos,waypoints_file=0):
+    def __init__(self,mutex,broadcast_thread,aircraftinfos,waypoints_file=0,logfile=0):
         super().__init__()
         self._mutex = mutex
         self._broadcast_thread = broadcast_thread

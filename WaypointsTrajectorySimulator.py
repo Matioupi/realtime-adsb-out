@@ -20,8 +20,8 @@ import time
 from AbstractTrajectorySimulatorBase import AbstractTrajectorySimulatorBase
 
 class WaypointsTrajectorySimulator(AbstractTrajectorySimulatorBase):
-    def __init__(self,mutex,broadcast_thread,aircraftinfos,waypoints_file):
-        super().__init__(mutex,broadcast_thread, aircraftinfos,waypoints_file)
+    def __init__(self,mutex,broadcast_thread,aircraftinfos,waypoints_file,logfile):
+        super().__init__(mutex,broadcast_thread,aircraftinfos,waypoints_file,logfile)
         self._starttime = datetime.datetime.now(datetime.timezone.utc)
         
         self._lat0 = aircraftinfos.lat_deg
@@ -38,6 +38,11 @@ class WaypointsTrajectorySimulator(AbstractTrajectorySimulatorBase):
                 posi = line.split()
                 print("[!] WAYPOINTS TRAJECTORY\tCallsign: "+self._aircraftinfos.callsign)
                 print("    [:] Lat: "+posi[0]+" | Lon: "+posi[1]+" | Alt: "+posi[2]+" | Spd: "+posi[3]+" | Trk Angle: "+posi[4]+" | ValidTime: "+posi[5])
+                
+                # Write to logfile -> CSV format: DATETIME,CALLSIGN,LAT,LONG,ALT,SPD,TRKANGLE
+                logfile.write(datetime.now()+","+self._aircraftinfos.callsign+","+posi[0]+","+posi[1]+","+posi[2]+","+posi[3]+","+posi[4])
+                
+                
                 self._aircraftinfos.lat_deg = float(posi[0])
                 self._aircraftinfos.lon_deg = float(posi[1])
                 self._aircraftinfos.alt_msl_m  = float(posi[2])
