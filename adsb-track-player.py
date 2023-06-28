@@ -39,6 +39,8 @@ def usage(msg=False):
     print("--trajectorytype <opt>   Types of simulated trajectories:")
     print("                           fixed       : fixed broadcast")
     print("                           flightsim   : dynamically generated flight path")
+    print("--numac <flightsim opt>      Number of aircraft to simulate, Default: 1")
+    print("--duration <opt>             Duration to simulate aircrafts in seconds, Default: 60")
     print("                           Default: fixed")
     print("--lat <opt>              Latitude for the plane in decimal degrees, Default: 50.44994")
     print("--long <opt>             Longitude for the plane in decimal degrees. Default: 30.5211")
@@ -54,20 +56,19 @@ def usage(msg=False):
     print("--nicsupplementb <opt>   NIC supplement-B, Default: 0")
     print("--surface                Aircraft located on ground, Default: False")
     print("--posrate <opt>          Position frame broadcast period in µs, Default: 150000")
-    print("--numac <opt>            Number of aircraft to simulate, Default: 1")
     print("")
     #print("see usage.md for additionnal information")
 
     sys.exit(2)
 
 ############ TRACK SIMULATION GENERATION FUNCTION ############
-def getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file,logfile):
+def getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file,logfile,duration):
     if trajectory_type == 'fixed':
-        return FixedTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,waypoints_file,logfile)  
+        return FixedTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,waypoints_file,logfile,duration)  
     elif trajectory_type == 'waypoints':
-        return WaypointsTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,waypoints_file,logfile)
+        return WaypointsTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,waypoints_file,logfile,duration)
     elif trajectory_type == 'flightsim':
-    	return FlightPathSimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,logfile)
+    	return FlightPathSimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,logfile,duration)
     else:
         return None
 
@@ -110,6 +111,7 @@ def main():
     scenariofile = None
     waypoints_file = None
     numac=1
+    duration=None
     try:
         (opts, args) = getopt(sys.argv[1:], 'h', \
             ['help','scenario=','icao=','callsign=','squawk=','trajectorytype=','lat=','long=','altitude=','speed=','vspeed=','maxloadfactor=','trackangle=',
@@ -141,8 +143,9 @@ def main():
             elif opt in ('--surface'):on_surface = True
             elif opt in ('--posrate'):posrate = int(arg)
             elif opt in ('--numac'):numac = int(arg)
+            elif opt in ('--duration'):duration = int(arg)
             else:usage("Unknown option %s\n" % opt)
-    print ("\n==== ADS-B Track Player v0.2.2 | by six3oo | core by Matioupi ====\n")
+    print ("\n==== ADS-B Track Player v0.3 | by six3oo | core by Matioupi ====\n")
     
     # GUI runtime
     #master.mainloop()
@@ -164,7 +167,7 @@ def main():
         for i in range(numac):
         # TRACK SIMULATION CREATION
 
-                track_simulation = getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file,logfile)
+                track_simulation = getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file,logfile,duration)
                 track_simulators.append(track_simulation)
     
     # Scenario file parsing
@@ -173,14 +176,14 @@ def main():
         with open(scenariofile,'r') as json_file:
             scenario = json.load(json_file)
         
-        if exists("waypoints.txt"):
-           waypoints_file = "waypoints.txt"                
+        if exists("waypoints.csv"):
+           waypoints_file = "waypoints.csv"                
            print("[!] Waypoints file detected: " +os.path.abspath(waypoints_file))
         
         for plane in scenario.values():
             plane_info = AircraftInfos.from_json(plane["filename"])
             # TRACK SIMULATION CREATION
-            track_simulation = getTrackSimulationThread(plane["trajectory_type"],broadcast_thread,plane_info,waypoints_file,logfile)
+            track_simulation = getTrackSimulationThread(plane["trajectory_type"],broadcast_thread,plane_info,waypoints_file,logfile,duration)
             track_simulators.append(track_simulation)
 
         print("[*] Scenario contains track simulations for "+str(len(track_simulators))+" plane(s):")

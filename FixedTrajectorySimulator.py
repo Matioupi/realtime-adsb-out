@@ -18,8 +18,8 @@ from datetime import datetime
 from AbstractTrajectorySimulatorBase import AbstractTrajectorySimulatorBase
 
 class FixedTrajectorySimulator(AbstractTrajectorySimulatorBase):
-    def __init__(self,mutex,broadcast_thread,aircraftinfos,waypoints_file,logfile):
-        super().__init__(mutex,broadcast_thread,aircraftinfos,waypoints_file,logfile)
+    def __init__(self,mutex,broadcast_thread,aircraftinfos,waypoints_file,logfile,duration):
+        super().__init__(mutex,broadcast_thread,aircraftinfos,waypoints_file,logfile,duration)
 
     def refresh_delay(self):
         return 0.5

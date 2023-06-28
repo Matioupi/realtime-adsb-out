@@ -1,5 +1,4 @@
 """ Dynamically generates a randomized conical flight path from initial values
-read from scenario file
 
 -------------------------------------------------------
 mutex protection occurs when calling replace_message
@@ -16,6 +15,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 
 import random
 import datetime, math
+import os
 from math import asin, atan2, cos, degrees, radians, sin
 from AbstractTrajectorySimulatorBase import AbstractTrajectorySimulatorBase
 
@@ -41,7 +41,7 @@ def get_point_at_distance(lat1, lon1, d, bearing, R=6371):
     return (degrees(lat2), degrees(lon2),)
 
 class FlightPathSimulator(AbstractTrajectorySimulatorBase):
-    def __init__(self,mutex,broadcast_thread,aircraftinfos,logfile):
+    def __init__(self,mutex,broadcast_thread,aircraftinfos,logfile,duration):
         super().__init__(mutex,broadcast_thread,aircraftinfos,logfile)
         self._starttime = datetime.datetime.now(datetime.timezone.utc)
         
@@ -50,13 +50,28 @@ class FlightPathSimulator(AbstractTrajectorySimulatorBase):
 
         self._alt_m = aircraftinfos.alt_msl_m
         self._speed_mps = aircraftinfos.speed_mps
+        self._duration = duration
 
     def refresh_delay(self):
         return REFRESH_RATE
 
     def update_aircraftinfos(self):
-        
         dist_spd = ((self._speed_mps * 1.852)/3600)*REFRESH_RATE
+        
+        ##### PRE-GENERATION PROTOTYPE CODE #####
+        """
+        dist_spd = ((self._speed_mps * 1.852)/3600)
+        
+        genLat = self._aircraftinfos.lat_deg
+        genLon = self._aircraftinfos.lon_deg
+        genSpd = self._aircraftinfos.speed_mps
+        genTrk = self._aircraftinfos.track_angle_deg
+        flightPath = {}
+        
+        
+        for i from 1 to self._duration:
+            genLat = 
+        """
         
         self._aircraftinfos.lat_deg, self._aircraftinfos.lon_deg = get_point_at_distance(self._aircraftinfos.lat_deg, self._aircraftinfos.lon_deg, dist_spd, self._aircraftinfos.track_angle_deg)
 

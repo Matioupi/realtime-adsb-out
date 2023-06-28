@@ -33,9 +33,9 @@ class WaypointsTrajectorySimulator(AbstractTrajectorySimulatorBase):
     def update_aircraftinfos(self):
         
         with open(self._waypoints_file, 'r') as wp:
-	    # Line format: "<0:lat> <1:lon> <2:alt> <3:speed> <4:track angle> <5:iterate time>"
+	    # Waypoint CSV format: "<0:callsign>,<1:lat>,<2:lon>,<3:alt>,<4:speed>,<5:track angle>,<6:iterate time>"
             for line in wp:
-                posi = line.split()
+                posi = line.split(",")
                 print("[!] WAYPOINTS TRAJECTORY\tCallsign: "+self._aircraftinfos.callsign)
                 print("    [:] Lat: "+posi[0]+" | Lon: "+posi[1]+" | Alt: "+posi[2]+" | Spd: "+posi[3]+" | Trk Angle: "+posi[4]+" | ValidTime: "+posi[5])
                 
