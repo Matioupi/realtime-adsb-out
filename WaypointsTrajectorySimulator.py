@@ -20,34 +20,25 @@ import time
 from AbstractTrajectorySimulatorBase import AbstractTrajectorySimulatorBase
 
 class WaypointsTrajectorySimulator(AbstractTrajectorySimulatorBase):
-    def __init__(self,mutex,broadcast_thread,aircraftinfos,waypoints_file,logfile):
-        super().__init__(mutex,broadcast_thread,aircraftinfos,waypoints_file,logfile)
-        self._starttime = datetime.datetime.now(datetime.timezone.utc)
-        
-        self._lat0 = aircraftinfos.lat_deg
-        self._lon0 = aircraftinfos.lon_deg
-        
-    def refresh_delay(self):
-        return 0.005
-        
-    def update_aircraftinfos(self):
-        
-        with open(self._waypoints_file, 'r') as wp:
-	    # Waypoint CSV format: "<0:callsign>,<1:lat>,<2:lon>,<3:alt>,<4:speed>,<5:track angle>,<6:iterate time>"
-            for line in wp:
-                posi = line.split(",")
-                print("[!] WAYPOINTS TRAJECTORY\tCallsign: "+self._aircraftinfos.callsign)
-                print("    [:] Lat: "+posi[0]+" | Lon: "+posi[1]+" | Alt: "+posi[2]+" | Spd: "+posi[3]+" | Trk Angle: "+posi[4]+" | ValidTime: "+posi[5])
-                
-                # Write to logfile -> CSV format: DATETIME,CALLSIGN,LAT,LONG,ALT,SPD,TRKANGLE
-                now=str(datetime.now())
-                with open(self._logfile,"a") as fLog:
-                    fLog.write.write("\n"+now+","+self._aircraftinfos.callsign+","+posi[0]+","+posi[1]+","+posi[2]+","+posi[3]+","+posi[4])
-                
-                
-                self._aircraftinfos.lat_deg = float(posi[0])
-                self._aircraftinfos.lon_deg = float(posi[1])
-                self._aircraftinfos.alt_msl_m  = float(posi[2])
-                self._aircraftinfos.speed_mps = float(posi[3])
-                self._aircraftinfos.track_angle_deg = float(posi[4]) #valid: 0.0-360.0
-                time.sleep(int(posi[5])) #int, in seconds		# TODO: Currently iterates whole file before user-quit takes effect
+	def __init__(self,mutex,broadcast_thread,aircraftinfos,waypoints_file,logfile):
+		super().__init__(mutex,broadcast_thread,aircraftinfos,waypoints_file,logfile)
+		self._starttime = datetime.datetime.now(datetime.timezone.utc)
+		self._lat0 = aircraftinfos.lat_deg
+		self._lon0 = aircraftinfos.lon_deg
+		self._logfile = logfile
+		
+	def refresh_delay(self):
+		return 0.005
+    
+	def update_aircraftinfos(self):
+		with open(self._waypoints_file, 'r') as wp:
+		# waypoints CSV format: "<0:callsign>,<1:lat>,<2:lon>,<3:alt>,<4:speed>,<5:track angle>,<6:iterate time>"
+			for line in wp:
+				posi = line.split(",")
+				print("[!] WAYPOINTS TRAJECTORY\tCallsign: "+self._aircraftinfos.callsign)
+				print("    [:] Lat: "+posi[1]+" | Lon: "+posi[2]+" | Alt: "+posi[3]+" | Spd: "+posi[4]+" | Trk Angle: "+posi[5]+" | ValidTime: "+posi[6])
+		
+		# Write to logfile -> CSV format: DATETIME,CALLSIGN,LAT,LONG,ALT,SPD,TRKANGLE
+		with open(self._logfile,"a") as fLog:
+			now=str(datetime.now())
+			fLog.write("\n"+now+","+self._aircraftinfos.callsign+","+str(self._aircraftinfos.lat_deg)+","+str(self._aircraftinfos.lon_deg)+","+str(self._aircraftinfos.alt_msl_m)+","+str(self._aircraftinfos.speed_mps)+","+str(self._aircraftinfos.track_angle_deg))

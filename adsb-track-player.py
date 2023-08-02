@@ -32,20 +32,20 @@ def usage(msg=False):
     print("[h] Usage: %s [options]\n" % sys.argv[0])
     print("-h | --help              Display help message")
     print("--scenario <opt>         Scenario mode, argument is scenario JSON filepath")
-    print("                           waypoints   : Include waypoints.txt file in script directory")
+    print("                           	waypoints   : Include waypoints file(s) in script directory")
     print("--icao <opt>             Callsign in hex, default: 0x508035")
     print("--callsign <opt>         Callsign (8 chars max), Default: DEADBEEF")
     print("--squawk <opt>           4-digit 4096 code squawk, Default: 7000")
     print("--trajectorytype <opt>   Types of simulated trajectories:")
-    print("                           fixed       : fixed broadcast")
-    print("                           flightsim   : dynamically generated flight path")
+    print("                           	fixed       : fixed broadcast")
+    print("                           	flightsim   : dynamically generated flight path")
     print("--numac <flightsim opt>      Number of aircraft to simulate, Default: 1")
     print("--duration <opt>             Duration to simulate aircrafts in seconds, Default: 60")
-    print("                           Default: fixed")
-    print("--lat <opt>              Latitude for the plane in decimal degrees, Default: 50.44994")
-    print("--long <opt>             Longitude for the plane in decimal degrees. Default: 30.5211")
-    print("--altitude <opt>         Altitude in decimal feet, Default: 1500.0")
-    print("--speed <opt>            Airspeed in decimal kph, Default: 300.0")
+    print("                           	Default: fixed")
+    print("--lat <opt>              Latitude for the plane in decimal degrees, Default: 1.3521")
+    print("--long <opt>             Longitude for the plane in decimal degrees. Default: 103.8198")
+    print("--altitude <opt>         Altitude in decimal feet, Default: 16500.0")
+    print("--speed <opt>            Airspeed in decimal kph, Default: 500.0")
     print("--vspeed <opt>           Vertical speed en ft/min, positive UP, Default: 0")
     print("--maxloadfactor          Specify the max load factor for aircraft simulation, Default: 1.45")
     print("--trackangle <opt>       Track angle in decimal degrees, Default: 0")
@@ -64,11 +64,11 @@ def usage(msg=False):
 ############ TRACK SIMULATION GENERATION FUNCTION ############
 def getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file,logfile,duration):
     if trajectory_type == 'fixed':
-        return FixedTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,waypoints_file,logfile,duration)  
+        return FixedTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,waypoints_file,logfile)  
     elif trajectory_type == 'waypoints':
-        return WaypointsTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,waypoints_file,logfile,duration)
+        return WaypointsTrajectorySimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,waypoints_file,logfile)
     elif trajectory_type == 'flightsim':
-    	return FlightPathSimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,logfile,duration)
+    	return FlightPathSimulator(broadcast_thread.getMutex(),broadcast_thread,aircraftinfos,waypoints_file,logfile,duration=120)
     else:
         return None
 
@@ -76,23 +76,20 @@ def getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,wayp
 def main():
 
     # Log file check
-    logfile = './logfile.csv'
+    logfile = '/home/anton/adsb-track-player/logfile.csv'
     if os.path.exists(logfile):
         if os.path.isfile(logfile):
             print("[*] logfile.csv found")
-        elif os.path.isdir(logfile):
-            print("[!] logfile is a directory, not a file!")
     else:
         print("[!] logfile not found, creating...")
         with open(logfile,"w") as fLog:
             fLog.write("DATETIME,CALLSIGN,LAT,LONG,ALT,SPD,TRKANGLE")
-        fLog.close()
         
     # Default values
     icao_aa = '0x508035'
     callsign = 'DEADBEEF'
     squawk = '7000'
-    alt_ft  = 2000.0
+    alt_ft  = 16500.0
     lat_deg = 1.3521
     lon_deg = 103.8198
     speed_kph = 500.0
@@ -145,10 +142,7 @@ def main():
             elif opt in ('--numac'):numac = int(arg)
             elif opt in ('--duration'):duration = int(arg)
             else:usage("Unknown option %s\n" % opt)
-    print ("\n==== ADS-B Track Player v0.3 | by six3oo | core by Matioupi ====\n")
-    
-    # GUI runtime
-    #master.mainloop()
+    print ("\n==== ADS-B Track Player v0.4 | by six3oo | core by Matioupi ====\n")
     
     # Functional code
     track_simulators = []
@@ -160,13 +154,12 @@ def main():
         aircraftinfos = AircraftInfos(icao_aa,callsign,squawk, \
                                     lat_deg,lon_deg,alt_ft,speed_kph,vspeed_ftpmin,maxloadfactor,track_angle_deg, \
                                     timesync,capability,type_code,surveillance_status,nicsup,on_surface)
-        
+        # Multiple aircraft option
         if numac>1:
             print("[!] Generating "+str(numac)+" fuzzing aircraft")
         
         for i in range(numac):
         # TRACK SIMULATION CREATION
-
                 track_simulation = getTrackSimulationThread(trajectory_type,broadcast_thread,aircraftinfos,waypoints_file,logfile,duration)
                 track_simulators.append(track_simulation)
     

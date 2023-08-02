@@ -22,73 +22,74 @@ from AbstractTrajectorySimulatorBase import AbstractTrajectorySimulatorBase
 REFRESH_RATE = 5
 
 def get_point_at_distance(lat1, lon1, d, bearing, R=6371):
-    """
-    lat: initial latitude, in degrees
-    lon: initial longitude, in degrees
-    d: target distance from initial
-    bearing: (true) heading in degrees
-    R: optional radius of sphere, defaults to mean radius of earth
-    Returns new lat/lon coordinate {d}km from initial, in degrees
-    """
-    lat1 = radians(lat1)
-    lon1 = radians(lon1)
-    a = radians(bearing)
-    lat2 = asin(sin(lat1) * cos(d/R) + cos(lat1) * sin(d/R) * cos(a))
-    lon2 = lon1 + atan2(
-       sin(a) * sin(d/R) * cos(lat1),
-        cos(d/R) - sin(lat1) * sin(lat2)
-    )
-    return (degrees(lat2), degrees(lon2),)
+	"""
+	lat: initial latitude, in degrees
+	lon: initial longitude, in degrees
+	d: target distance from initial
+	bearing: (true) heading in degrees
+	R: optional radius of sphere, defaults to mean radius of earth
+	Returns new lat/lon coordinate {d}km from initial, in degrees
+	"""
+	lat1 = radians(lat1)
+	lon1 = radians(lon1)
+	a = radians(bearing)
+	lat2 = asin(sin(lat1) * cos(d/R) + cos(lat1) * sin(d/R) * cos(a))
+	lon2 = lon1 + atan2(
+		sin(a) * sin(d/R) * cos(lat1),
+			cos(d/R) - sin(lat1) * sin(lat2)
+	)
+	return (degrees(lat2), degrees(lon2),)
 
 class FlightPathSimulator(AbstractTrajectorySimulatorBase):
-    def __init__(self,mutex,broadcast_thread,aircraftinfos,logfile,duration):
-        super().__init__(mutex,broadcast_thread,aircraftinfos,logfile)
-        self._starttime = datetime.datetime.now(datetime.timezone.utc)
-        
-        self._lat0 = aircraftinfos.lat_deg
-        self._lon0 = aircraftinfos.lon_deg
+	def __init__(self,mutex,broadcast_thread,aircraftinfos,waypoints_file,logfile,duration):
+		super().__init__(mutex,broadcast_thread,aircraftinfos,waypoints_file,logfile,duration)
+		self._starttime = datetime.datetime.now(datetime.timezone.utc)
+		self._icao = str(aircraftinfos.icao)
+		self._lat0 = aircraftinfos.lat_deg
+		self._lon0 = aircraftinfos.lon_deg
 
-        self._alt_m = aircraftinfos.alt_msl_m
-        self._speed_mps = aircraftinfos.speed_mps
-        self._duration = duration
+		self._alt_m = aircraftinfos.alt_msl_m
+		self._speed_mps = aircraftinfos.speed_mps
+		self._duration = duration
 
-    def refresh_delay(self):
-        return REFRESH_RATE
+	def refresh_delay(self):
+		return REFRESH_RATE
 
-    def update_aircraftinfos(self):
-        dist_spd = ((self._speed_mps * 1.852)/3600)*REFRESH_RATE
-        
-        ##### PRE-GENERATION PROTOTYPE CODE #####
-        """
-        dist_spd = ((self._speed_mps * 1.852)/3600)
-        
-        genLat = self._aircraftinfos.lat_deg
-        genLon = self._aircraftinfos.lon_deg
-        genSpd = self._aircraftinfos.speed_mps
-        genTrk = self._aircraftinfos.track_angle_deg
-        flightPath = {}
-        
-        
-        for i from 1 to self._duration:
-            genLat = 
-        """
-        
-        self._aircraftinfos.lat_deg, self._aircraftinfos.lon_deg = get_point_at_distance(self._aircraftinfos.lat_deg, self._aircraftinfos.lon_deg, dist_spd, self._aircraftinfos.track_angle_deg)
+	def update_aircraftinfos(self):
+		dist_spd = ((self._speed_mps * 1.852)/3600)*REFRESH_RATE
 
-        self._aircraftinfos.speed_mps += random.uniform(-10,10)
-        self._aircraftinfos.track_angle_deg += random.uniform(-3,3)
-        self._aircraftinfos.alt_msl_m += random.uniform(-5,5)
+		##### PRE-GENERATION PROTOTYPE CODE #####
+		"""
+		dist_spd = ((self._speed_mps * 1.852)/3600)
+
+		genLat = self._aircraftinfos.lat_deg
+		genLon = self._aircraftinfos.lon_deg
+		genSpd = self._aircraftinfos.speed_mps
+		genTrk = self._aircraftinfos.track_angle_deg
+		flightPath = {}
+
+
+		for i from 1 to self._duration:
+			genLat = 
+		"""
+
+		# Calculate new Lat/Lon based on Speed+Track Angle
+		self._aircraftinfos.lat_deg, self._aircraftinfos.lon_deg = get_point_at_distance(self._aircraftinfos.lat_deg, self._aircraftinfos.lon_deg, dist_spd, self._aircraftinfos.track_angle_deg)
+
+		self._aircraftinfos.speed_mps += random.uniform(-10,10)
+		self._aircraftinfos.track_angle_deg += random.uniform(-3,3)
+		self._aircraftinfos.alt_msl_m += random.uniform(-5,5)
+
+        # Track Angle 0-360 wrapping
+		if self._aircraftinfos.track_angle_deg < 0:
+			self._aircraftinfos.track_angle_deg += 360
+		elif self._aircraftinfos.track_angle_deg > 360:
+			self._aircraftinfos.track_angle_deg -= 360
         
-        # Track angle 0-360 wrapping
-        if self._aircraftinfos.track_angle_deg < 0:
-            self._aircraftinfos.track_angle_deg += 360
-        elif self._aircraftinfos.track_angle_deg > 360:
-            self._aircraftinfos.track_angle_deg -= 360
-        
-        print("[!] FLIGHT SIM\t\tCallsign: "+self._aircraftinfos.callsign)
-        print("    [:] Lat: "+str(self._aircraftinfos.lat_deg)+" | Lon: "+str(self._aircraftinfos.lon_deg)+" | Alt: "+str(self._aircraftinfos.alt_msl_m)+" | Spd: "+str(self._aircraftinfos.speed_mps)+" | Trk Angle: "+str(self._aircraftinfos.track_angle_deg))
-        
-        # Write to logfile -> CSV format: DATETIME,CALLSIGN,LAT,LONG,ALT,SPD,TRKANGLE
-        now=str(datetime.now())
-        with open(self._logfile,"a") as fLog:
-            fLog.write.write("\n"+now,","+self._aircraftinfos.callsign+","+str(self._aircraftinfos.lat_deg)+","+str(self._aircraftinfos.lon_deg)+","+str(self._aircraftinfos.alt_msl_m)+","+str(self._aircraftinfos.speed_mps)+","+str(self._aircraftinfos.track_angle_deg))
+		print("[!] FLIGHT SIM\t\tICAO: "+self._icao+"\t\tCallsign: "+self._aircraftinfos.callsign)
+		print("    [:] Lat: "+str(self._aircraftinfos.lat_deg)+" | Lon: "+str(self._aircraftinfos.lon_deg)+" | Alt: "+str(self._aircraftinfos.alt_msl_m)+" | Spd: "+str(self._aircraftinfos.speed_mps)+" | Trk Angle: "+str(self._aircraftinfos.track_angle_deg))
+
+		#Write to logfile -> CSV format: DATETIME,CALLSIGN,LAT,LONG,ALT,SPD,TRKANGLE
+		with open(self._logfile,"a") as fLog:
+			now=str(datetime.datetime.now())
+			fLog.write("\n"+now+","+self._aircraftinfos.callsign+","+str(self._aircraftinfos.lat_deg)+","+str(self._aircraftinfos.lon_deg)+","+str(self._aircraftinfos.alt_msl_m)+","+str(self._aircraftinfos.speed_mps)+","+str(self._aircraftinfos.track_angle_deg))

@@ -52,6 +52,7 @@ class LibHackRfBoardIds(IntEnum):
     BOARD_ID_JELLYBEAN = 0
     BOARD_ID_JAWBREAKER = 1
     BOARD_ID_HACKRF_ONE = 2
+    BOARD_ID_HACKRF_ONE_V9 = 4
     BOARD_ID_RAD1O = 3
     BOARD_ID_INVALID = 0xFF
 
@@ -806,11 +807,11 @@ class HackRF(object):
         __class__.__logger.debug(__class__.__name__ + " Trying to call isStreaming")
         if self.opened() and self.getTransceiverMode() != LibHackRfTransceiverMode.TRANSCEIVER_MODE_OFF:
             return __class__.__libhackrf.hackrf_is_streaming(self.__pDevice) == LibHackRfReturnCode.HACKRF_TRUE
-        else:
-            print("isStreaming corner case")
-            __class__.__logger.debug(
-                "Trying to call isStreaming for non-opened or non transmitting " + __class__.__name__)
-            return False
+        #else:
+            #print("isStreaming corner case")
+            #__class__.__logger.debug(
+            #    "Trying to call isStreaming for non-opened or non transmitting " + __class__.__name__)
+            #return False
 
     def stopRX(self):
         __class__.__logger.debug(__class__.__name__ + " Trying to stop RX")
