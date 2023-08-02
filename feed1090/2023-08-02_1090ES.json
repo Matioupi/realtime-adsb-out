@@ -1,0 +1,489 @@
+[
+{"datetime":"2023-08-02 14-09-00", "target": "", "latitude": 1.359418, "longitude": 104.016613, "altitude": 9675, "heading": 346, "speed": 280}
+]
+[
+{"datetime":"2023-08-02 14-20-43", "target": "CPJ007  ", "latitude": 1.484225, "longitude": 104.001933, "altitude": 11075, "heading": 274, "speed": 255}
+]
+[
+{"datetime":"2023-08-02 14-20-54", "target": "CPJ007  ", "latitude": 1.484365, "longitude": 103.999802, "altitude": 11000, "heading": 274, "speed": 255}
+]
+[
+{"datetime":"2023-08-02 14-21-04", "target": "CPJ007  ", "latitude": 1.485306, "longitude": 103.981359, "altitude": 10825, "heading": 274, "speed": 255}
+]
+[
+{"datetime":"2023-08-02 14-21-14", "target": "CPJ007  ", "latitude": 1.486084, "longitude": 103.965252, "altitude": 10625, "heading": 273, "speed": 253}
+]
+[
+{"datetime":"2023-08-02 14-21-25", "target": "CPJ007  ", "latitude": 1.486588, "longitude": 103.952683, "altitude": 10400, "heading": 273, "speed": 252}
+]
+[
+{"datetime":"2023-08-02 14-21-35", "target": "CPJ007  ", "latitude": 1.486954, "longitude": 103.943699, "altitude": 10225, "heading": 273, "speed": 250}
+]
+[
+{"datetime":"2023-08-02 14-21-46", "target": "CPJ007  ", "latitude": 1.487623, "longitude": 103.929622, "altitude": 10025, "heading": 274, "speed": 248}
+]
+[
+{"datetime":"2023-08-02 14-21-56", "target": "CPJ007  ", "latitude": 1.488556, "longitude": 103.917723, "altitude": 9850, "heading": 280, "speed": 244}
+]
+[
+{"datetime":"2023-08-02 14-22-07", "target": "CPJ007  ", "latitude": 1.489975, "longitude": 103.912555, "altitude": 9750, "heading": 295, "speed": 242}
+]
+[
+{"datetime":"2023-08-02 14-22-17", "target": "CPJ007  ", "latitude": 1.489975, "longitude": 103.912555, "altitude": 9425, "heading": 318, "speed": 240}
+]
+[
+{"datetime":"2023-08-02 14-22-28", "target": "CPJ007  ", "latitude": 1.502055, "longitude": 103.897279, "altitude": 9400, "heading": 318, "speed": 240}
+]
+[
+{"datetime":"2023-08-02 14-22-38", "target": "CPJ007  ", "latitude": 1.502055, "longitude": 103.897279, "altitude": 9400, "heading": 318, "speed": 240}
+]
+[
+{"datetime":"2023-08-02 14-22-49", "target": "MEDIC15 ", "latitude": 1.351458, "longitude": 103.824826, "altitude": 1425, "heading": 33, "speed": 153}, {"hex": "424846", "target": "CPJ007  ", "latitude": 1.502055, "longitude": 103.897279, "altitude": 9400, "heading": 318, "speed": 240}
+]
+[
+{"datetime":"2023-08-02 14-22-59", "target": "MEDIC15 ", "latitude": 1.360024, "longitude": 103.830272, "altitude": 1375, "heading": 32, "speed": 150}, {"hex": "424846", "target": "CPJ007  ", "latitude": 1.502055, "longitude": 103.897279, "altitude": 9400, "heading": 318, "speed": 240}
+]
+[
+{"datetime":"2023-08-02 14-23-10", "target": "MEDIC15 ", "latitude": 1.366262, "longitude": 103.834344, "altitude": 1250, "heading": 34, "speed": 154}, {"hex": "424846", "target": "CPJ007  ", "latitude": 1.502055, "longitude": 103.897279, "altitude": 9400, "heading": 318, "speed": 240}
+]
+[
+{"datetime":"2023-08-02 14-23-20", "target": "MEDIC15 ", "latitude": 1.371735, "longitude": 103.837979, "altitude": 1075, "heading": 33, "speed": 157}, {"hex": "424846", "target": "CPJ007  ", "latitude": 1.502055, "longitude": 103.897279, "altitude": 9400, "heading": 318, "speed": 240}
+]
+[
+{"datetime":"2023-08-02 14-23-31", "target": "MEDIC15 ", "latitude": 1.378189, "longitude": 103.842215, "altitude": 950, "heading": 33, "speed": 155}, {"hex": "424846", "target": "CPJ007  ", "latitude": 1.502055, "longitude": 103.897279, "altitude": 9400, "heading": 318, "speed": 240}
+]
+[
+{"datetime":"2023-08-02 14-23-41", "target": "MEDIC15 ", "latitude": 1.385115, "longitude": 103.846751, "altitude": 775, "heading": 33, "speed": 156}
+]
+[
+{"datetime":"2023-08-02 14-23-52", "target": "MEDIC15 ", "latitude": 1.388672, "longitude": 103.849011, "altitude": 600, "heading": 33, "speed": 156}
+]
+[
+{"datetime":"2023-08-02 14-24-02", "target": "MEDIC15 ", "latitude": 1.388672, "longitude": 103.849011, "altitude": 450, "heading": 34, "speed": 152}
+]
+[
+{"datetime":"2023-08-02 14-24-13", "target": "MEDIC15 ", "latitude": 1.401036, "longitude": 103.857169, "altitude": 275, "heading": 33, "speed": 152}
+]
+[
+{"datetime":"2023-08-02 14-24-23", "target": "MEDIC15 ", "latitude": 1.401036, "longitude": 103.857169, "altitude": 275, "heading": 33, "speed": 152}
+]
+[
+{"datetime":"2023-08-02 14-24-34", "target": "MEDIC15 ", "latitude": 1.401036, "longitude": 103.857169, "altitude": 275, "heading": 33, "speed": 152}
+]
+[
+{"datetime":"2023-08-02 14-24-44", "target": "MEDIC15 ", "latitude": 1.401036, "longitude": 103.857169, "altitude": 275, "heading": 33, "speed": 152}
+]
+[
+{"datetime":"2023-08-02 14-24-55", "target": "MEDIC15 ", "latitude": 1.401036, "longitude": 103.857169, "altitude": 275, "heading": 33, "speed": 152}
+]
+[
+{"datetime":"2023-08-02 14-25-05", "target": "MEDIC15 ", "latitude": 1.401036, "longitude": 103.857169, "altitude": 275, "heading": 33, "speed": 152}
+]
+[
+{"datetime":"2023-08-02 14-32-15", "target": "VHAVL   ", "latitude": 1.352203, "longitude": 103.825157, "altitude": 1500, "heading": 35, "speed": 157}
+]
+[
+{"datetime":"2023-08-02 14-32-26", "target": "VHAVL   ", "latitude": 1.357743, "longitude": 103.828851, "altitude": 1400, "heading": 33, "speed": 162}
+]
+[
+{"datetime":"2023-08-02 14-32-36", "target": "VHAVL   ", "latitude": 1.3644, "longitude": 103.833255, "altitude": 1250, "heading": 33, "speed": 157}
+]
+[
+{"datetime":"2023-08-02 14-32-47", "target": "VHAVL   ", "latitude": 1.370682, "longitude": 103.837373, "altitude": 1100, "heading": 33, "speed": 155}
+]
+[
+{"datetime":"2023-08-02 14-32-57", "target": "VHAVL   ", "latitude": 1.375671, "longitude": 103.840772, "altitude": 1025, "heading": 34, "speed": 152}
+]
+[
+{"datetime":"2023-08-02 14-33-08", "target": "VHAVL   ", "latitude": 1.375671, "longitude": 103.840772, "altitude": 800, "heading": 34, "speed": 152}
+]
+[
+{"datetime":"2023-08-02 14-33-18", "target": "VHAVL   ", "latitude": 1.387908, "longitude": 103.848693, "altitude": 650, "heading": 34, "speed": 148}
+]
+[
+{"datetime":"2023-08-02 14-33-29", "target": "AXM5596 ", "latitude": 1.503021, "longitude": 103.950123, "altitude": 10825, "heading": 110, "speed": 360}, {"hex": "7c02ff", "target": "VHAVL   ", "latitude": 1.387908, "longitude": 103.848693, "altitude": 550, "heading": 33, "speed": 150}
+]
+[
+{"datetime":"2023-08-02 14-33-39", "target": "AXM5596 ", "latitude": 1.497345, "longitude": 103.965113, "altitude": 11000, "heading": 110, "speed": 365}, {"hex": "7c02ff", "target": "VHAVL   ", "latitude": 1.399658, "longitude": 103.85632, "altitude": 400, "heading": 33, "speed": 146}
+]
+[
+{"datetime":"2023-08-02 14-33-50", "target": "AXM5596 ", "latitude": 1.497345, "longitude": 103.965113, "altitude": 11350, "heading": 110, "speed": 369}, {"hex": "7c02ff", "target": "VHAVL   ", "latitude": 1.399658, "longitude": 103.85632, "altitude": 400, "heading": 33, "speed": 146}
+]
+[
+{"datetime":"2023-08-02 14-34-00", "target": "AXM5596 ", "latitude": 1.497345, "longitude": 103.965113, "altitude": 11700, "heading": 110, "speed": 369}, {"hex": "7c02ff", "target": "VHAVL   ", "latitude": 1.399658, "longitude": 103.85632, "altitude": 400, "heading": 33, "speed": 146}
+]
+[
+{"datetime":"2023-08-02 14-34-11", "target": "AXM5596 ", "latitude": 1.497345, "longitude": 103.965113, "altitude": 11700, "heading": 110, "speed": 369}, {"hex": "7c02ff", "target": "VHAVL   ", "latitude": 1.399658, "longitude": 103.85632, "altitude": 400, "heading": 33, "speed": 146}
+]
+[
+{"datetime":"2023-08-02 14-34-21", "target": "AXM5596 ", "latitude": 1.497345, "longitude": 103.965113, "altitude": 11700, "heading": 110, "speed": 369}, {"hex": "7c02ff", "target": "VHAVL   ", "latitude": 1.399658, "longitude": 103.85632, "altitude": 400, "heading": 33, "speed": 146}
+]
+[
+{"datetime":"2023-08-02 14-34-32", "target": "AXM5596 ", "latitude": 1.497345, "longitude": 103.965113, "altitude": 11700, "heading": 110, "speed": 369}, {"hex": "7c02ff", "target": "VHAVL   ", "latitude": 1.399658, "longitude": 103.85632, "altitude": 400, "heading": 33, "speed": 146}
+]
+[
+{"datetime":"2023-08-02 14-34-42", "target": "AXM5596 ", "latitude": 1.497345, "longitude": 103.965113, "altitude": 11700, "heading": 110, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 14-34-53", "target": "AXM5596 ", "latitude": 1.497345, "longitude": 103.965113, "altitude": 11700, "heading": 110, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 14-35-03", "target": "AXM5596 ", "latitude": 1.497345, "longitude": 103.965113, "altitude": 11700, "heading": 110, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 14-35-13", "target": "AXM5596 ", "latitude": 1.497345, "longitude": 103.965113, "altitude": 11700, "heading": 110, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 14-35-24", "target": "AXM5596 ", "latitude": 1.432086, "longitude": 104.136563, "altitude": 14575, "heading": 110, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 14-35-34", "target": "AXM5596 ", "latitude": 1.432086, "longitude": 104.136563, "altitude": 14575, "heading": 110, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 14-35-45", "target": "AXM5596 ", "latitude": 1.432086, "longitude": 104.136563, "altitude": 14575, "heading": 110, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 14-35-55", "target": "AXM5596 ", "latitude": 1.432086, "longitude": 104.136563, "altitude": 14575, "heading": 110, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 14-36-06", "target": "AXM5596 ", "latitude": 1.432086, "longitude": 104.136563, "altitude": 14575, "heading": 110, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 14-36-16", "target": "AXM5596 ", "latitude": 1.432086, "longitude": 104.136563, "altitude": 14575, "heading": 110, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 14-36-58", "target": "", "latitude": 1.384836, "longitude": 104.193484, "altitude": 35975, "heading": 298, "speed": 478}
+]
+[
+{"datetime":"2023-08-02 14-37-09", "target": "", "latitude": 1.384836, "longitude": 104.193484, "altitude": 35975, "heading": 298, "speed": 479}
+]
+[
+{"datetime":"2023-08-02 14-37-19", "target": "", "latitude": 1.384836, "longitude": 104.193484, "altitude": 35975, "heading": 298, "speed": 479}
+]
+[
+{"datetime":"2023-08-02 14-37-30", "target": "", "latitude": 1.384836, "longitude": 104.193484, "altitude": 35975, "heading": 298, "speed": 479}
+]
+[
+{"datetime":"2023-08-02 14-37-40", "target": "", "latitude": 1.430786, "longitude": 104.106306, "altitude": 36000, "heading": 298, "speed": 479}
+]
+[
+{"datetime":"2023-08-02 14-37-51", "target": "", "latitude": 1.442093, "longitude": 104.084752, "altitude": 36000, "heading": 298, "speed": 479}
+]
+[
+{"datetime":"2023-08-02 14-38-01", "target": "", "latitude": 1.442093, "longitude": 104.084752, "altitude": 36000, "heading": 298, "speed": 479}
+]
+[
+{"datetime":"2023-08-02 14-38-12", "target": "", "latitude": 1.442093, "longitude": 104.084752, "altitude": 36000, "heading": 298, "speed": 479}
+]
+[
+{"datetime":"2023-08-02 14-38-22", "target": "", "latitude": 1.472946, "longitude": 104.02591, "altitude": 36000, "heading": 298, "speed": 479}
+]
+[
+{"datetime":"2023-08-02 14-38-33", "target": "AXM712  ", "latitude": 1.44405, "longitude": 104.007047, "altitude": 11175, "heading": 306, "speed": 282}, {"hex": "750451", "target": "", "latitude": 1.482456, "longitude": 104.007758, "altitude": 36000, "heading": 298, "speed": 480}
+]
+[
+{"datetime":"2023-08-02 14-38-43", "target": "AXM712  ", "latitude": 1.452484, "longitude": 103.992113, "altitude": 11625, "heading": 300, "speed": 289}, {"hex": "750451", "target": "", "latitude": 1.482456, "longitude": 104.007758, "altitude": 36000, "heading": 298, "speed": 480}
+]
+[
+{"datetime":"2023-08-02 14-38-54", "target": "AXM712  ", "latitude": 1.45903, "longitude": 103.980382, "altitude": 12050, "heading": 299, "speed": 294}, {"hex": "750451", "target": "", "latitude": 1.482456, "longitude": 104.007758, "altitude": 36000, "heading": 298, "speed": 480}
+]
+[
+{"datetime":"2023-08-02 14-39-04", "target": "AXM712  ", "latitude": 1.465759, "longitude": 103.968325, "altitude": 12525, "heading": 300, "speed": 296}, {"hex": "750451", "target": "", "latitude": 1.482456, "longitude": 104.007758, "altitude": 36025, "heading": 298, "speed": 480}
+]
+[
+{"datetime":"2023-08-02 14-39-15", "target": "AXM712  ", "latitude": 1.473358, "longitude": 103.954778, "altitude": 13050, "heading": 300, "speed": 299}, {"hex": "750451", "target": "", "latitude": 1.482456, "longitude": 104.007758, "altitude": 36025, "heading": 298, "speed": 480}
+]
+[
+{"datetime":"2023-08-02 14-39-25", "target": "AXM712  ", "latitude": 1.480637, "longitude": 103.941883, "altitude": 13450, "heading": 300, "speed": 304}, {"hex": "750451", "target": "", "latitude": 1.482456, "longitude": 104.007758, "altitude": 36025, "heading": 298, "speed": 480}
+]
+[
+{"datetime":"2023-08-02 14-39-36", "target": "AXM712  ", "latitude": 1.488042, "longitude": 103.928675, "altitude": 13775, "heading": 300, "speed": 310}, {"hex": "750451", "target": "", "latitude": 1.482456, "longitude": 104.007758, "altitude": 36025, "heading": 298, "speed": 480}
+]
+[
+{"datetime":"2023-08-02 14-39-46", "target": "AXM712  ", "latitude": 1.490112, "longitude": 103.924938, "altitude": 14225, "heading": 300, "speed": 310}, {"hex": "750451", "target": "", "latitude": 1.482456, "longitude": 104.007758, "altitude": 36025, "heading": 298, "speed": 480}
+]
+[
+{"datetime":"2023-08-02 14-39-57", "target": "AXM712  ", "latitude": 1.502287, "longitude": 103.90334, "altitude": 14700, "heading": 300, "speed": 314}, {"hex": "750451", "target": "", "latitude": 1.482456, "longitude": 104.007758, "altitude": 36025, "heading": 298, "speed": 480}
+]
+[
+{"datetime":"2023-08-02 14-40-07", "target": "AXM712  ", "latitude": 1.510899, "longitude": 103.88795, "altitude": 15225, "heading": 300, "speed": 314}, {"hex": "750451", "target": "", "latitude": 1.482456, "longitude": 104.007758, "altitude": 36025, "heading": 298, "speed": 480}
+]
+[
+{"datetime":"2023-08-02 14-40-18", "target": "AXM712  ", "latitude": 1.510899, "longitude": 103.88795, "altitude": 15325, "heading": 300, "speed": 316}
+]
+[
+{"datetime":"2023-08-02 14-40-28", "target": "AXM712  ", "latitude": 1.510899, "longitude": 103.88795, "altitude": 15575, "heading": 300, "speed": 316}
+]
+[
+{"datetime":"2023-08-02 14-40-39", "target": "AXM712  ", "latitude": 1.510899, "longitude": 103.88795, "altitude": 15575, "heading": 300, "speed": 316}
+]
+[
+{"datetime":"2023-08-02 14-40-50", "target": "AXM712  ", "latitude": 1.510899, "longitude": 103.88795, "altitude": 15575, "heading": 300, "speed": 316}
+]
+[
+{"datetime":"2023-08-02 14-41-00", "target": "AXM712  ", "latitude": 1.510899, "longitude": 103.88795, "altitude": 15575, "heading": 300, "speed": 316}
+]
+[
+{"datetime":"2023-08-02 14-41-11", "target": "AXM712  ", "latitude": 1.510899, "longitude": 103.88795, "altitude": 15575, "heading": 300, "speed": 316}
+]
+[
+{"datetime":"2023-08-02 14-43-06", "target": "CSN354  ", "latitude": 1.424011, "longitude": 104.055471, "altitude": 11625, "heading": 342, "speed": 314}
+]
+[
+{"datetime":"2023-08-02 14-43-16", "target": "CSN354  ", "latitude": 1.424011, "longitude": 104.055471, "altitude": 11775, "heading": 342, "speed": 314}
+]
+[
+{"datetime":"2023-08-02 14-43-27", "target": "CSN354  ", "latitude": 1.424011, "longitude": 104.055471, "altitude": 11975, "heading": 342, "speed": 332}
+]
+[
+{"datetime":"2023-08-02 14-43-37", "target": "CSN354  ", "latitude": 1.424011, "longitude": 104.055471, "altitude": 12125, "heading": 342, "speed": 332}
+]
+[
+{"datetime":"2023-08-02 14-43-48", "target": "CSN354  ", "latitude": 1.424011, "longitude": 104.055471, "altitude": 12425, "heading": 342, "speed": 359}
+]
+[
+{"datetime":"2023-08-02 14-43-58", "target": "CSN354  ", "latitude": 1.424011, "longitude": 104.055471, "altitude": 12700, "heading": 342, "speed": 359}
+]
+[
+{"datetime":"2023-08-02 14-44-09", "target": "CSN354  ", "latitude": 1.424011, "longitude": 104.055471, "altitude": 13225, "heading": 342, "speed": 359}
+]
+[
+{"datetime":"2023-08-02 14-44-19", "target": "CSN354  ", "latitude": 1.424011, "longitude": 104.055471, "altitude": 13550, "heading": 342, "speed": 368}
+]
+[
+{"datetime":"2023-08-02 14-44-30", "target": "CSN354  ", "latitude": 1.56071, "longitude": 104.010362, "altitude": 13875, "heading": 341, "speed": 373}
+]
+[
+{"datetime":"2023-08-02 14-44-40", "target": "CSN354  ", "latitude": 1.577087, "longitude": 104.004542, "altitude": 14325, "heading": 341, "speed": 373}
+]
+[
+{"datetime":"2023-08-02 14-44-51", "target": "CSN354  ", "latitude": 1.577087, "longitude": 104.004542, "altitude": 14325, "heading": 341, "speed": 373}
+]
+[
+{"datetime":"2023-08-02 14-45-01", "target": "CSN354  ", "latitude": 1.577087, "longitude": 104.004542, "altitude": 15325, "heading": 341, "speed": 370}
+]
+[
+{"datetime":"2023-08-02 14-45-12", "target": "CSN354  ", "latitude": 1.62149, "longitude": 103.988668, "altitude": 15525, "heading": 341, "speed": 373}
+]
+[
+{"datetime":"2023-08-02 14-45-22", "target": "CSN354  ", "latitude": 1.62149, "longitude": 103.988668, "altitude": 15525, "heading": 341, "speed": 373}
+]
+[
+{"datetime":"2023-08-02 14-45-33", "target": "MXD178  ", "latitude": 1.384232, "longitude": 104.013015, "altitude": 38000, "heading": 309, "speed": 482}, {"hex": "780492", "target": "CCA450  ", "latitude": 1.428549, "longitude": 104.025374, "altitude": 11175, "heading": 347, "speed": 299}, {"hex": "781620", "target": "CSN354  ", "latitude": 1.62149, "longitude": 103.988668, "altitude": 15525, "heading": 341, "speed": 373}
+]
+[
+{"datetime":"2023-08-02 14-45-43", "target": "MXD178  ", "latitude": 1.392242, "longitude": 104.002913, "altitude": 38000, "heading": 309, "speed": 482}, {"hex": "780492", "target": "CCA450  ", "latitude": 1.429825, "longitude": 104.025072, "altitude": 11375, "heading": 347, "speed": 307}, {"hex": "781620", "target": "CSN354  ", "latitude": 1.62149, "longitude": 103.988668, "altitude": 15525, "heading": 341, "speed": 373}
+]
+[
+{"datetime":"2023-08-02 14-45-54", "target": "MXD178  ", "latitude": 1.407647, "longitude": 103.983559, "altitude": 38000, "heading": 309, "speed": 483}, {"hex": "780492", "target": "CCA450  ", "latitude": 1.457737, "longitude": 104.018602, "altitude": 11550, "heading": 347, "speed": 317}, {"hex": "781620", "target": "CSN354  ", "latitude": 1.62149, "longitude": 103.988668, "altitude": 15525, "heading": 341, "speed": 373}
+]
+[
+{"datetime":"2023-08-02 14-46-04", "target": "MXD178  ", "latitude": 1.407647, "longitude": 103.983559, "altitude": 38000, "heading": 309, "speed": 483}, {"hex": "780492", "target": "CCA450  ", "latitude": 1.472351, "longitude": 104.01497, "altitude": 11825, "heading": 347, "speed": 327}, {"hex": "781620", "target": "CSN354  ", "latitude": 1.62149, "longitude": 103.988668, "altitude": 15525, "heading": 341, "speed": 373}
+]
+[
+{"datetime":"2023-08-02 14-46-15", "target": "MXD178  ", "latitude": 1.407647, "longitude": 103.983559, "altitude": 38000, "heading": 309, "speed": 483}, {"hex": "780492", "target": "CCA450  ", "latitude": 1.484299, "longitude": 104.010967, "altitude": 12175, "heading": 341, "speed": 332}
+]
+[
+{"datetime":"2023-08-02 14-46-25", "target": "MXD178  ", "latitude": 1.456604, "longitude": 103.922052, "altitude": 38000, "heading": 309, "speed": 486}, {"hex": "780492", "target": "CCA450  ", "latitude": 1.501236, "longitude": 104.004868, "altitude": 12575, "heading": 340, "speed": 336}
+]
+[
+{"datetime":"2023-08-02 14-46-36", "target": "MXD178  ", "latitude": 1.457748, "longitude": 103.920655, "altitude": 38000, "heading": 309, "speed": 486}, {"hex": "780492", "target": "CCA450  ", "latitude": 1.519226, "longitude": 103.998211, "altitude": 12975, "heading": 340, "speed": 339}
+]
+[
+{"datetime":"2023-08-02 14-46-46", "target": "MXD178  ", "latitude": 1.484756, "longitude": 103.886765, "altitude": 38000, "heading": 309, "speed": 488}, {"hex": "780492", "target": "CCA450  ", "latitude": 1.533371, "longitude": 103.992998, "altitude": 13425, "heading": 340, "speed": 341}
+]
+[
+{"datetime":"2023-08-02 14-46-57", "target": "MXD178  ", "latitude": 1.484756, "longitude": 103.886765, "altitude": 38000, "heading": 309, "speed": 488}, {"hex": "780492", "target": "CCA450  ", "latitude": 1.55072, "longitude": 103.986527, "altitude": 13800, "heading": 340, "speed": 346}
+]
+[
+{"datetime":"2023-08-02 14-47-07", "target": "MXD178  ", "latitude": 1.484756, "longitude": 103.886765, "altitude": 38000, "heading": 309, "speed": 488}, {"hex": "780492", "target": "CCA450  ", "latitude": 1.559407, "longitude": 103.983275, "altitude": 14025, "heading": 340, "speed": 348}
+]
+[
+{"datetime":"2023-08-02 14-47-18", "target": "MXD178  ", "latitude": 1.484756, "longitude": 103.886765, "altitude": 38000, "heading": 309, "speed": 488}, {"hex": "780492", "target": "CCA450  ", "latitude": 1.559407, "longitude": 103.983275, "altitude": 14775, "heading": 340, "speed": 348}
+]
+[
+{"datetime":"2023-08-02 14-47-28", "target": "MXD178  ", "latitude": 1.484756, "longitude": 103.886765, "altitude": 38000, "heading": 309, "speed": 488}, {"hex": "780492", "target": "CCA450  ", "latitude": 1.588394, "longitude": 103.972608, "altitude": 14975, "heading": 340, "speed": 346}
+]
+[
+{"datetime":"2023-08-02 14-47-39", "target": "MXD178  ", "latitude": 1.484756, "longitude": 103.886765, "altitude": 38000, "heading": 309, "speed": 488}, {"hex": "780492", "target": "CCA450  ", "latitude": 1.588394, "longitude": 103.972608, "altitude": 14975, "heading": 340, "speed": 346}
+]
+[
+{"datetime":"2023-08-02 14-47-49", "target": "CCA450  ", "latitude": 1.588394, "longitude": 103.972608, "altitude": 14975, "heading": 340, "speed": 346}
+]
+[
+{"datetime":"2023-08-02 14-48-00", "target": "CCA450  ", "latitude": 1.588394, "longitude": 103.972608, "altitude": 14975, "heading": 340, "speed": 346}
+]
+[
+{"datetime":"2023-08-02 14-48-10", "target": "CCA450  ", "latitude": 1.588394, "longitude": 103.972608, "altitude": 14975, "heading": 340, "speed": 346}
+]
+[
+{"datetime":"2023-08-02 14-48-21", "target": "CCA450  ", "latitude": 1.588394, "longitude": 103.972608, "altitude": 14975, "heading": 340, "speed": 346}
+]
+[
+{"datetime":"2023-08-02 14-49-44", "target": "", "latitude": 1.554932, "longitude": 103.989739, "altitude": 11400, "heading": 339, "speed": 385}
+]
+[
+{"datetime":"2023-08-02 14-49-55", "target": "SIA7862 ", "latitude": 1.560928, "longitude": 103.987411, "altitude": 11675, "heading": 339, "speed": 386}
+]
+[
+{"datetime":"2023-08-02 14-50-05", "target": "SIA7862 ", "latitude": 1.560928, "longitude": 103.987411, "altitude": 11675, "heading": 339, "speed": 386}
+]
+[
+{"datetime":"2023-08-02 14-50-16", "target": "SIA7862 ", "latitude": 1.560928, "longitude": 103.987411, "altitude": 11675, "heading": 339, "speed": 386}
+]
+[
+{"datetime":"2023-08-02 14-50-26", "target": "SIA7862 ", "latitude": 1.560928, "longitude": 103.987411, "altitude": 11675, "heading": 339, "speed": 386}
+]
+[
+{"datetime":"2023-08-02 14-50-37", "target": "SIA7862 ", "latitude": 1.560928, "longitude": 103.987411, "altitude": 11675, "heading": 339, "speed": 386}
+]
+[
+{"datetime":"2023-08-02 14-50-47", "target": "SIA7862 ", "latitude": 1.560928, "longitude": 103.987411, "altitude": 11675, "heading": 339, "speed": 386}
+]
+[
+{"datetime":"2023-08-02 14-50-58", "target": "CQN2096 ", "latitude": 1.356532, "longitude": 104.044695, "altitude": 8600, "heading": 348, "speed": 286}, {"hex": "76ccd0", "target": "SIA7862 ", "latitude": 1.560928, "longitude": 103.987411, "altitude": 11675, "heading": 339, "speed": 386}
+]
+[
+{"datetime":"2023-08-02 14-51-08", "target": "CQN2096 ", "latitude": 1.374222, "longitude": 104.040811, "altitude": 9750, "heading": 348, "speed": 280}, {"hex": "76ccd0", "target": "SIA7862 ", "latitude": 1.560928, "longitude": 103.987411, "altitude": 11675, "heading": 339, "speed": 386}
+]
+[
+{"datetime":"2023-08-02 14-51-19", "target": "CQN2096 ", "latitude": 1.391679, "longitude": 104.036976, "altitude": 10300, "heading": 348, "speed": 279}
+]
+[
+{"datetime":"2023-08-02 14-51-29", "target": "CQN2096 ", "latitude": 1.401352, "longitude": 104.034941, "altitude": 10500, "heading": 348, "speed": 279}
+]
+[
+{"datetime":"2023-08-02 14-51-40", "target": "CQN2096 ", "latitude": 1.401352, "longitude": 104.034941, "altitude": 10925, "heading": 343, "speed": 298}
+]
+[
+{"datetime":"2023-08-02 14-51-50", "target": "CQN2096 ", "latitude": 1.431342, "longitude": 104.026747, "altitude": 11250, "heading": 341, "speed": 304}
+]
+[
+{"datetime":"2023-08-02 14-52-01", "target": "CQN2096 ", "latitude": 1.447723, "longitude": 104.020929, "altitude": 11550, "heading": 341, "speed": 312}
+]
+[
+{"datetime":"2023-08-02 14-52-11", "target": "CQN2096 ", "latitude": 1.447723, "longitude": 104.020929, "altitude": 11875, "heading": 341, "speed": 316}
+]
+[
+{"datetime":"2023-08-02 14-52-22", "target": "CQN2096 ", "latitude": 1.481323, "longitude": 104.008965, "altitude": 12200, "heading": 341, "speed": 328}
+]
+[
+{"datetime":"2023-08-02 14-52-32", "target": "MXD158  ", "latitude": 1.409555, "longitude": 103.997861, "altitude": 36000, "heading": 307, "speed": 493}, {"hex": "7814e7", "target": "CQN2096 ", "latitude": 1.495972, "longitude": 104.003751, "altitude": 12500, "heading": 341, "speed": 332}
+]
+[
+{"datetime":"2023-08-02 14-52-43", "target": "MXD158  ", "latitude": 1.413652, "longitude": 103.992415, "altitude": 36000, "heading": 307, "speed": 493}, {"hex": "7814e7", "target": "CQN2096 ", "latitude": 1.509829, "longitude": 103.998855, "altitude": 12775, "heading": 341, "speed": 341}
+]
+[
+{"datetime":"2023-08-02 14-52-53", "target": "MXD158  ", "latitude": 1.413652, "longitude": 103.992415, "altitude": 36000, "heading": 307, "speed": 492}, {"hex": "7814e7", "target": "CQN2096 ", "latitude": 1.525681, "longitude": 103.993277, "altitude": 13100, "heading": 341, "speed": 348}
+]
+[
+{"datetime":"2023-08-02 14-53-04", "target": "MXD158  ", "latitude": 1.413652, "longitude": 103.992415, "altitude": 36000, "heading": 307, "speed": 492}, {"hex": "7814e7", "target": "CQN2096 ", "latitude": 1.543533, "longitude": 103.986992, "altitude": 13425, "heading": 341, "speed": 354}
+]
+[
+{"datetime":"2023-08-02 14-53-14", "target": "MXD158  ", "latitude": 1.413652, "longitude": 103.992415, "altitude": 36000, "heading": 307, "speed": 492}, {"hex": "7814e7", "target": "CQN2096 ", "latitude": 1.556288, "longitude": 103.982565, "altitude": 13700, "heading": 341, "speed": 359}
+]
+[
+{"datetime":"2023-08-02 14-53-25", "target": "MXD158  ", "latitude": 1.413652, "longitude": 103.992415, "altitude": 36000, "heading": 307, "speed": 492}, {"hex": "7814e7", "target": "CQN2096 ", "latitude": 1.561066, "longitude": 103.980894, "altitude": 14075, "heading": 341, "speed": 365}
+]
+[
+{"datetime":"2023-08-02 14-53-35", "target": "MXD158  ", "latitude": 1.485947, "longitude": 103.897042, "altitude": 36000, "heading": 307, "speed": 492}, {"hex": "7814e7", "target": "CQN2096 ", "latitude": 1.593384, "longitude": 103.969535, "altitude": 14375, "heading": 341, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 14-53-46", "target": "MXD158  ", "latitude": 1.485947, "longitude": 103.897042, "altitude": 36000, "heading": 307, "speed": 492}, {"hex": "7814e7", "target": "CQN2096 ", "latitude": 1.600233, "longitude": 103.967127, "altitude": 14500, "heading": 341, "speed": 371}
+]
+[
+{"datetime":"2023-08-02 14-53-56", "target": "MXD158  ", "latitude": 1.485947, "longitude": 103.897042, "altitude": 36000, "heading": 307, "speed": 492}, {"hex": "7814e7", "target": "CQN2096 ", "latitude": 1.600233, "longitude": 103.967127, "altitude": 14500, "heading": 341, "speed": 371}
+]
+[
+{"datetime":"2023-08-02 14-54-07", "target": "MXD158  ", "latitude": 1.485947, "longitude": 103.897042, "altitude": 36000, "heading": 307, "speed": 492}, {"hex": "7814e7", "target": "CQN2096 ", "latitude": 1.600233, "longitude": 103.967127, "altitude": 14500, "heading": 341, "speed": 371}
+]
+[
+{"datetime":"2023-08-02 14-54-17", "target": "MXD158  ", "latitude": 1.485947, "longitude": 103.897042, "altitude": 36000, "heading": 307, "speed": 492}, {"hex": "7814e7", "target": "CQN2096 ", "latitude": 1.600233, "longitude": 103.967127, "altitude": 14500, "heading": 341, "speed": 371}
+]
+[
+{"datetime":"2023-08-02 14-54-28", "target": "MXD158  ", "latitude": 1.485947, "longitude": 103.897042, "altitude": 36000, "heading": 307, "speed": 492}, {"hex": "7814e7", "target": "CQN2096 ", "latitude": 1.600233, "longitude": 103.967127, "altitude": 14500, "heading": 341, "speed": 371}
+]
+[
+{"datetime":"2023-08-02 14-54-38", "target": "CQN2096 ", "latitude": 1.600233, "longitude": 103.967127, "altitude": 14500, "heading": 341, "speed": 371}
+]
+[
+{"datetime":"2023-08-02 14-59-22", "target": "", "latitude": 1.576678, "longitude": 103.965375, "altitude": 42975, "heading": 354, "speed": 467}
+]
+[
+{"datetime":"2023-08-02 14-59-32", "target": "", "latitude": 1.576678, "longitude": 103.965375, "altitude": 42975, "heading": 354, "speed": 467}
+]
+[
+{"datetime":"2023-08-02 14-59-43", "target": "", "latitude": 1.576678, "longitude": 103.965375, "altitude": 42975, "heading": 354, "speed": 467}
+]
+[
+{"datetime":"2023-08-02 14-59-54", "target": "", "latitude": 1.576678, "longitude": 103.965375, "altitude": 42975, "heading": 354, "speed": 467}
+]
+[
+{"datetime":"2023-08-02 15-00-04", "target": "", "latitude": 1.576678, "longitude": 103.965375, "altitude": 42975, "heading": 354, "speed": 467}
+]
+[
+{"datetime":"2023-08-02 15-00-15", "target": "", "latitude": 1.576678, "longitude": 103.965375, "altitude": 42975, "heading": 354, "speed": 467}
+]
+[
+{"datetime":"2023-08-02 15-00-25", "target": "", "latitude": 1.576678, "longitude": 103.965375, "altitude": 42975, "heading": 354, "speed": 467}
+]
+[
+{"datetime":"2023-08-02 15-00-36", "target": "", "latitude": 1.576678, "longitude": 103.965375, "altitude": 42975, "heading": 354, "speed": 467}
+]
+[
+{"datetime":"2023-08-02 15-04-58", "target": "BAV308  ", "latitude": 1.387253, "longitude": 104.042762, "altitude": 9950, "heading": 348, "speed": 281}
+]
+[
+{"datetime":"2023-08-02 15-05-08", "target": "BAV308  ", "latitude": 1.387253, "longitude": 104.042762, "altitude": 10150, "heading": 348, "speed": 281}
+]
+[
+{"datetime":"2023-08-02 15-05-19", "target": "BAV308  ", "latitude": 1.426361, "longitude": 104.034277, "altitude": 10825, "heading": 348, "speed": 300}
+]
+[
+{"datetime":"2023-08-02 15-05-29", "target": "BAV308  ", "latitude": 1.430643, "longitude": 104.033329, "altitude": 11050, "heading": 348, "speed": 306}
+]
+[
+{"datetime":"2023-08-02 15-05-40", "target": "BAV308  ", "latitude": 1.430643, "longitude": 104.033329, "altitude": 11175, "heading": 347, "speed": 321}
+]
+[
+{"datetime":"2023-08-02 15-05-50", "target": "BAV308  ", "latitude": 1.430643, "longitude": 104.033329, "altitude": 11425, "heading": 347, "speed": 321}
+]
+[
+{"datetime":"2023-08-02 15-06-01", "target": "BAV308  ", "latitude": 1.430643, "longitude": 104.033329, "altitude": 11650, "heading": 347, "speed": 321}
+]
+[
+{"datetime":"2023-08-02 15-06-11", "target": "BAV308  ", "latitude": 1.430643, "longitude": 104.033329, "altitude": 11975, "heading": 347, "speed": 357}
+]
+[
+{"datetime":"2023-08-02 15-06-22", "target": "BAV308  ", "latitude": 1.430643, "longitude": 104.033329, "altitude": 12425, "heading": 347, "speed": 357}
+]
+[
+{"datetime":"2023-08-02 15-06-32", "target": "BAV308  ", "latitude": 1.430643, "longitude": 104.033329, "altitude": 12850, "heading": 347, "speed": 364}
+]
+[
+{"datetime":"2023-08-02 15-06-43", "target": "BAV308  ", "latitude": 1.556986, "longitude": 104.003827, "altitude": 13350, "heading": 347, "speed": 365}
+]
+[
+{"datetime":"2023-08-02 15-06-53", "target": "BAV308  ", "latitude": 1.571594, "longitude": 104.000399, "altitude": 13700, "heading": 347, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 15-07-04", "target": "BAV308  ", "latitude": 1.577935, "longitude": 103.998855, "altitude": 13825, "heading": 347, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 15-07-14", "target": "BAV308  ", "latitude": 1.577935, "longitude": 103.998855, "altitude": 14675, "heading": 347, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 15-07-25", "target": "BAV308  ", "latitude": 1.577935, "longitude": 103.998855, "altitude": 14700, "heading": 347, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 15-07-35", "target": "BAV308  ", "latitude": 1.577935, "longitude": 103.998855, "altitude": 14700, "heading": 347, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 15-07-46", "target": "BAV308  ", "latitude": 1.577935, "longitude": 103.998855, "altitude": 14700, "heading": 347, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 15-07-56", "target": "BAV308  ", "latitude": 1.577935, "longitude": 103.998855, "altitude": 14700, "heading": 347, "speed": 369}
+]
+[
+{"datetime":"2023-08-02 15-08-07", "target": "BAV308  ", "latitude": 1.577935, "longitude": 103.998855, "altitude": 14700, "heading": 347, "speed": 369}
+]

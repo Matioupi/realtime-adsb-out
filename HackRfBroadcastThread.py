@@ -80,17 +80,17 @@ class HackRfBroadcastThread(threading.Thread):
             
         self._hackrf_broadcaster.setCrystalPPM(0)
         
-        #result = self._hackrf_broadcaster.setAntennaPowerMode(LibHackRfHwMode.HW_MODE_ON) # Antenna Power Mode ON or OFF
-        #if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-        #    print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-            
+        result = self._hackrf_broadcaster.setAntennaPowerMode(LibHackRfHwMode.HW_MODE_ON) # Antenna Power Mode ON or OFF
+        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+           
         result = self._hackrf_broadcaster.setAmplifierMode(LibHackRfHwMode.HW_MODE_ON)	# LNA Amplifier ON or OFF
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
             
-        #result = self._hackrf_broadcaster.setLNAGain(14)				# LNA Amplifier Gain
-        #if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-        #    print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+        result = self._hackrf_broadcaster.setLNAGain(14)				# LNA Amplifier Gain
+        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
                         
         # 2MHz sample rate to meet ADS-B spec of 0.5µs PPM symbol
         result = self._hackrf_broadcaster.setSampleRate(2000000)
@@ -175,15 +175,15 @@ class HackRfBroadcastThread(threading.Thread):
             self._mutex.release()
 
             result = self._hackrf_broadcaster.startTX(hackrfTXCB,self._tx_context)
-            #if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-            #    print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+            if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+                print("startTXError:",result, ",", HackRF.getHackRfErrorCodeName(result))
     
             while self._hackrf_broadcaster.isStreaming():
                 time.sleep(sleep_time)
 
             result = self._hackrf_broadcaster.stopTX()
-            #if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-            #    print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+            if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+                print("stopTXError:",result, ",", HackRF.getHackRfErrorCodeName(result))
 
             #self._mutex.release() 
 
