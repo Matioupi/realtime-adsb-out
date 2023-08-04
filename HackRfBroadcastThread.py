@@ -106,7 +106,7 @@ class HackRfBroadcastThread(threading.Thread):
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
             
-        result = self._hackrf_broadcaster.setTXVGAGain(40)				# TX VGA Gain (4 for wire feed + attenuators, 47 for wireless)
+        result = self._hackrf_broadcaster.setTXVGAGain(47)				# TX VGA Gain (4 for wire feed + attenuators, 47 for wireless)
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))  
         

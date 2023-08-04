@@ -15,7 +15,6 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 
 import random
 import datetime, math
-import os
 from math import asin, atan2, cos, degrees, radians, sin
 from AbstractTrajectorySimulatorBase import AbstractTrajectorySimulatorBase
 
@@ -25,9 +24,9 @@ def get_point_at_distance(lat1, lon1, d, bearing, R=6371):
 	"""
 	lat: initial latitude, in degrees
 	lon: initial longitude, in degrees
-	d: target distance from initial
+	d: target distance from initial, in km
 	bearing: (true) heading in degrees
-	R: optional radius of sphere, defaults to mean radius of earth
+	R: optional radius of sphere, defaults to mean radius of earth in km
 	Returns new lat/lon coordinate {d}km from initial, in degrees
 	"""
 	lat1 = radians(lat1)
@@ -51,6 +50,8 @@ class FlightPathSimulator(AbstractTrajectorySimulatorBase):
 		self._alt_m = aircraftinfos.alt_msl_m
 		self._speed_mps = aircraftinfos.speed_mps
 		self._duration = duration
+		self._generate = True
+		self.counter = 0
 
 	def refresh_delay(self):
 		return REFRESH_RATE
@@ -60,27 +61,54 @@ class FlightPathSimulator(AbstractTrajectorySimulatorBase):
 
 		##### PRE-GENERATION PROTOTYPE CODE #####
 		"""
-		dist_spd = ((self._speed_mps * 1.852)/3600)
+                if self._generate:
+                        dist_spd = ((self._speed_mps * 1.852)/3600)
+                        genLat = self._aircraftinfos.lat_deg
+                        genLon = self._aircraftinfos.lon_deg
+                        genAlt = self._aircraftinfos.alt_msl_m
+                        genSpd = self._aircraftinfos.speed_mps
+                        genTrk = self._aircraftinfos.track_angle_deg
+                        flightPath = []
 
-		genLat = self._aircraftinfos.lat_deg
-		genLon = self._aircraftinfos.lon_deg
-		genSpd = self._aircraftinfos.speed_mps
-		genTrk = self._aircraftinfos.track_angle_deg
-		flightPath = {}
+                        # Pre-generate flight path strings to list
+                        for i from 1 to self._duration:
+                                dataFrame = self._aircraftinfos.callsign+','+(str)genLat+','+(str)genLon+','+(str)genAlt+','+(str)genSpd+','+(str)genTrk
+                                flightPath.append(dataFrame)
+                                # Calculate new Lat/Lon based on Speed+Track Angle
+                                genLat, genLon = get_point_at_distance(genLat, genLon, dist_spd, genTrk)
+                                # Randomized trajectory cone
+                                genAlt += random.uniform(-5,5)
+                                genSpd += random.uniform(-10,10)
+                                genTrk+= random.uniform(-3,3)
 
+                        # Write generated flight path to temp file
+                        with open('spoof.csv','a') as spoof:
+                                for frame in flightPath:
+                                        spoof.write(frame)
 
-		for i from 1 to self._duration:
-			genLat = 
+                        # temp file spoof.csv format: "<0:callsign>,<1:lat>,<2:lon>,<3:alt>,<4:speed>,<5:track angle>"
+                        self._generate = False
+                else:
+                        with open('spoof.csv', 'r') as spoof:
+                                for self._counter in spoof:
+                                        posi = line.split(',')
+                                        self._aircraftinfos.lat_deg = posi[1]
+                                        self._aircraftinfos.lon_deg = posi[2]
+                                        self._aircraftinfos.alt_msl_m = posi[3]
+                                        self._aircraftinfos.speed_mps = posi[4]
+                                        self._aircraftinfos.track_angle_deg = posi[5]
+                        
 		"""
 
-		# Calculate new Lat/Lon based on Speed+Track Angle
+		
 		self._aircraftinfos.lat_deg, self._aircraftinfos.lon_deg = get_point_at_distance(self._aircraftinfos.lat_deg, self._aircraftinfos.lon_deg, dist_spd, self._aircraftinfos.track_angle_deg)
 
+                # Randomized trajectory cone
 		self._aircraftinfos.speed_mps += random.uniform(-10,10)
 		self._aircraftinfos.track_angle_deg += random.uniform(-3,3)
 		self._aircraftinfos.alt_msl_m += random.uniform(-5,5)
 
-        # Track Angle 0-360 wrapping
+                # Track Angle 0-360 wrapping
 		if self._aircraftinfos.track_angle_deg < 0:
 			self._aircraftinfos.track_angle_deg += 360
 		elif self._aircraftinfos.track_angle_deg > 360:

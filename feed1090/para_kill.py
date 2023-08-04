@@ -25,7 +25,7 @@ def dump_kill():
 			ic('Killing all SSH stream data...')
 			kill_ssh_tail = "ps -aux | grep ConnectTimeout=5 | awk '{print $2}' | xargs kill -9"
 			Popen(kill_ssh_tail, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-
+			ic('Complete.')
 		except Exception as e:
 			print(e)
 	except Exception as e:
@@ -50,7 +50,6 @@ def log_kill():
 			ic('Killing all SSH stream data...')
 			kill_ssh_tail = "ps -aux | grep ConnectTimeout=5 | awk '{print $2}' | xargs kill -9"
 			Popen(kill_ssh_tail, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-			ic('Complete.')
 			
 		except Exception as e:
 			print(e)
@@ -70,11 +69,11 @@ def main():
 	ic('Killing file read SSH 3/3...')
 	kill_ssh_tail = "ps -aux | grep ConnectTimeout=5 | awk '{print $2}' | xargs kill -9"
 	Popen(kill_ssh_tail, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-	D = Thread(target=dump_kill)
+	#D = Thread(target=dump_kill)
 	L = Thread(target=log_kill)
-	D.start()
-	time.sleep(6)
-	ic('Re-SSHing to pi...')
+	#D.start()
+	#time.sleep(6)
+	#ic('Re-SSHing to pi...')
 	L.start()
 	
 main()

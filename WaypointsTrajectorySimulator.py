@@ -26,6 +26,7 @@ class WaypointsTrajectorySimulator(AbstractTrajectorySimulatorBase):
 		self._lat0 = aircraftinfos.lat_deg
 		self._lon0 = aircraftinfos.lon_deg
 		self._logfile = logfile
+		self._icao = str(aircraftinfos.icao)
 		
 	def refresh_delay(self):
 		return 0.005
@@ -34,8 +35,8 @@ class WaypointsTrajectorySimulator(AbstractTrajectorySimulatorBase):
 		with open(self._waypoints_file, 'r') as wp:
 		# waypoints CSV format: "<0:callsign>,<1:lat>,<2:lon>,<3:alt>,<4:speed>,<5:track angle>,<6:iterate time>"
 			for line in wp:
-				posi = line.split(",")
-				print("[!] WAYPOINTS TRAJECTORY\tCallsign: "+self._aircraftinfos.callsign)
+				posi = line.split(',')
+				print("[!] WAYPOINTS TRAJECTORYt\tICAO: "+self._icao+"\t\tCallsign: "+self._aircraftinfos.callsign)
 				print("    [:] Lat: "+posi[1]+" | Lon: "+posi[2]+" | Alt: "+posi[3]+" | Spd: "+posi[4]+" | Trk Angle: "+posi[5]+" | ValidTime: "+posi[6])
 		
 		# Write to logfile -> CSV format: DATETIME,CALLSIGN,LAT,LONG,ALT,SPD,TRKANGLE

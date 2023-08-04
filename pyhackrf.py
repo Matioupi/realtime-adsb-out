@@ -51,8 +51,10 @@ class LibHackRfReturnCode(IntEnum):
 class LibHackRfBoardIds(IntEnum):
     BOARD_ID_JELLYBEAN = 0
     BOARD_ID_JAWBREAKER = 1
-    BOARD_ID_HACKRF_ONE = 2
-    BOARD_ID_HACKRF_ONE_V9 = 4
+    # For HackRF One V9, BoardId is 4
+    BOARD_ID_HACKRF_ONE = 4
+    # For older HackRF Ones
+    #BOARD_ID_HACKRF_ONE = 2
     BOARD_ID_RAD1O = 3
     BOARD_ID_INVALID = 0xFF
 

@@ -81,7 +81,7 @@ def main():
         if os.path.isfile(logfile):
             print("[*] logfile.csv found")
     else:
-        print("[!] logfile not found, creating...")
+        print("[!] logfile.csv not found, creating...")
         with open(logfile,"w") as fLog:
             fLog.write("DATETIME,CALLSIGN,LAT,LONG,ALT,SPD,TRKANGLE")
         
