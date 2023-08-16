@@ -51,7 +51,10 @@ class LibHackRfReturnCode(IntEnum):
 class LibHackRfBoardIds(IntEnum):
     BOARD_ID_JELLYBEAN = 0
     BOARD_ID_JAWBREAKER = 1
-    BOARD_ID_HACKRF_ONE = 4 # 4 for V9 and later, 2 for earlier
+    # For HackRF One V9+, BoardId is 4
+    BOARD_ID_HACKRF_ONE = 4
+    # For older HackRF Ones
+    #BOARD_ID_HACKRF_ONE = 2
     BOARD_ID_RAD1O = 3
     BOARD_ID_INVALID = 0xFF
 
@@ -806,12 +809,11 @@ class HackRF(object):
         __class__.__logger.debug(__class__.__name__ + " Trying to call isStreaming")
         if self.opened() and self.getTransceiverMode() != LibHackRfTransceiverMode.TRANSCEIVER_MODE_OFF:
             return __class__.__libhackrf.hackrf_is_streaming(self.__pDevice) == LibHackRfReturnCode.HACKRF_TRUE
-        else:
-            print("[*] isStreaming corner case")
-            print("[*] Trying to call isStreaming for non-opened or non transmitting " + __class__.__name__)
-            __class__.__logger.debug(
-                "Trying to call isStreaming for non-opened or non transmitting " + __class__.__name__)
-            return False
+        #else:
+            #print("isStreaming corner case")
+            #__class__.__logger.debug(
+            #    "Trying to call isStreaming for non-opened or non transmitting " + __class__.__name__)
+            #return False
 
     def stopRX(self):
         __class__.__logger.debug(__class__.__name__ + " Trying to stop RX")
@@ -873,22 +875,16 @@ class HackRF(object):
                 result = __class__.__libhackrf.hackrf_start_tx(self.__pDevice, self.__txCallback,
                                                                None)
             else:
-                print("[*] tx_context:",tx_context)
-                print("[*] pDevice:",self.__pDevice)
-                print("[*] txCallback:",self.__txCallback)
-                # TX start is called HERE
                 result = __class__.__libhackrf.hackrf_start_tx(self.__pDevice, self.__txCallback,
                                                                byref(tx_context))
             if (result == LibHackRfReturnCode.HACKRF_SUCCESS):
                 __class__.__logger.info("Success starting TX")
                 self.__transceiverMode = LibHackRfTransceiverMode.TRANSCEIVER_MODE_TX
-                print("[*] Success starting TX")
             else:
                 __class__.__logger.error(
                     "Error (%d," + __class__.getHackRfErrorCodeName(result) + ") while starting TX ", result)
         else:
             __class__.__logger.debug("Trying to start TX for non-opened or in transmission " + __class__.__name__)
-            print("[!] Trying to start TX for non-opened or in transmission " + __class__.__name__)
         return result
 
     def getTransceiverMode(self):

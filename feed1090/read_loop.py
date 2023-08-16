@@ -5,7 +5,7 @@ from time import sleep
 def json_reader():
         local_user = 'anton'
         dateString = time.strftime('%d-%m-%Y')
-        filePath = f'''/home/{local_user}/ais/ais/static/adsb/{dateString}/feed1090.json'''
+        filePath = f'''test_isaac.json'''
         try:
                 sleep(2)
                 df=pd.read_json(filePath)
