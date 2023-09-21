@@ -10,7 +10,7 @@ import pandas as pd
 pi_ip = '100.81.91.96'
 pi_user = "pi"
 pi_password = "raspberry"
-local_user = 'anton'
+local_user = os.getenv("USERNAME")
 dateString = time.strftime('%d-%m-%Y')
 
 """
@@ -103,9 +103,9 @@ def log_sync():
                 copyFile = f'''sshpass -p {pi_password} scp {pi_user}@{pi_ip}:/home/pi/log1090/{logPullString} /home/{local_user}/ais/ais/static/adsb/{dateString}/feed1090.json'''
                 Popen(copyFile, shell=True, stdout=PIPE, stderr=PIPE, text=True)
                 # JSON format fixing
-                time.sleep(4)
-                if os.path.isfile(filePath):
-                        fix_log()
+                #time.sleep(4)
+                #if os.path.isfile(filePath):
+                #        fix_log()
                 SyncedAt = time.strftime('[%H-%M-%S] '+dateString)
                 ic(SyncedAt)
         except Exception as e:
@@ -135,6 +135,5 @@ def main():
         while True:
                 log_sync()
                 time.sleep(8)
-        
-        
+
 main()
