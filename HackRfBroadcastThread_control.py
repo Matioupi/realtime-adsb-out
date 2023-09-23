@@ -65,6 +65,7 @@ class HackRfBroadcastThread(threading.Thread):
 
         self._messages_feed_threads = {}
 
+
         # Initialize pyHackRF library
         result = HackRF.initialize()
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
@@ -73,48 +74,42 @@ class HackRfBroadcastThread(threading.Thread):
         # Initialize HackRF instance (could pass board serial or index if specific board is needed)
         self._hackrf_broadcaster = HackRF()
 
-        # HackRF Transmit Settings
+        # Do requiered settings
+        # so far hard-coded e.g. gain and disabled amp are specific to hardware test setup
+        # with hackrf feeding a flight aware dongle through cable + attenuators (-50dB)
         result = self._hackrf_broadcaster.open()
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-            
-        self._hackrf_broadcaster.setCrystalPPM(0)
 
-        result = self._hackrf_broadcaster.setAmplifierMode(LibHackRfHwMode.HW_MODE_ON)	# LNA Amplifier ON or OFF
-        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-        result = self._hackrf_broadcaster.setLNAGain(14)				# LNA Amplifier Gain (default 14)
-        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-        result = self._hackrf_broadcaster.setAntennaPowerMode(LibHackRfHwMode.HW_MODE_ON) # Antenna Power Mode ON or OFF
-        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+        self._hackrf_broadcaster.setCrystalPPM(0)
             
-        # 2MHz sample rate to meet ADS-B spec of 0.5µs PPM symbol
         result = self._hackrf_broadcaster.setSampleRate(2000000)
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-            
+
         result = self._hackrf_broadcaster.setBasebandFilterBandwidth(HackRF.computeBaseBandFilterBw(2000000))
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-            
-        #result = self.hackrf_broadcaster.setFrequency(868000000)			# 868MHz = Free frequency for over the air broadcast tests
-        result = self._hackrf_broadcaster.setFrequency(1090000000)			# Actual 1090MHz frequency setting
-        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
-            
-        result = self._hackrf_broadcaster.setTXVGAGain(47)				# TX VGA Gain (4 for wire feed + attenuators, 47 for wireless)
+
+        #result = self.hackrf_broadcaster.setFrequency(868000000)   # free frequency for over the air brodcast tests
+        result = self._hackrf_broadcaster.setFrequency(1090000000)  # do not use 1090MHz for actual over the air broadcasting
+                                                                    # only if you use wire feed (you'll need attenuators in that case)
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
             print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
 
-        self._hackrf_broadcaster.printBoardInfos()				# Print HackRF Board Instance Info
+            result = self._hackrf_broadcaster.setAmplifierMode(LibHackRfHwMode.HW_MODE_ON)	# LNA Amplifier ON or OFF
+        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+
+        result = self._hackrf_broadcaster.setTXVGAGain(47)            # week gain (used for wire feed + attenuators)
+        if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
+            print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
 
         self._tx_context = hackrf_tx_context()
 
         self._do_stop = False
 
-    # HackRF lib and instance cleanup at object destruction time
+    # do hackRF lib and instance cleanup at object destruction time
     def __del__(self):
         result = self._hackrf_broadcaster.close()
         if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
@@ -134,13 +129,9 @@ class HackRfBroadcastThread(threading.Thread):
     #@Timed
     def replace_message(self,type,frame_even,frame_odd = []):
 
-        # 1090ES Frame IQ modulating
         frame_IQ = self._lowlevelencoder.frame_1090es_ppm_modulate_IQ(frame_even, frame_odd)
 
-        #with open('temp.iq','wb') as iq:
-        #    iq.write(frame_IQ)
-
-        # this will usually be called from another thread, so mutex lock mechanism is used during update
+          # this will usually be called from another thread, so mutex lock mecanism is used during update
 
         self._mutex.acquire()
         calling_thread = threading.current_thread()
@@ -170,7 +161,7 @@ class HackRfBroadcastThread(threading.Thread):
             self._tx_context.buffer_length = length
             self._tx_context.buffer = (c_ubyte*self._tx_context.buffer_length).from_buffer_copy(data)
             
-            # TODO : need to evaluate if mutex protection is required during full broadcast or
+            # TODO : need to evaluate if mutex protection is requiered during full broadcast or
             #        could be reduced to buffer filling (probably can be reduced)
             #        reduced version is when next line mutex.release() is uncommented and
             #        mutex release at the end of this method is commented
@@ -178,15 +169,16 @@ class HackRfBroadcastThread(threading.Thread):
             self._mutex.release()
 
             result = self._hackrf_broadcaster.startTX(hackrfTXCB,self._tx_context)
+
             if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-                print("[!] startTXError:",result, ",", HackRF.getHackRfErrorCodeName(result))
-    
+                print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
+
             while self._hackrf_broadcaster.isStreaming():
                 time.sleep(sleep_time)
 
             result = self._hackrf_broadcaster.stopTX()
             if (result != LibHackRfReturnCode.HACKRF_SUCCESS):
-                print("[!] stopTXError:",result, ",", HackRF.getHackRfErrorCodeName(result))
+                print("Error :",result, ",", HackRF.getHackRfErrorCodeName(result))
 
             #self._mutex.release() 
 
@@ -194,7 +186,6 @@ class HackRfBroadcastThread(threading.Thread):
 
         while not self._do_stop:
             #self._mutex.acquire()
-            
             now = datetime.datetime.now(datetime.timezone.utc)
             plane_messages = bytearray()
             sleep_time = 10.0
@@ -207,9 +198,9 @@ class HackRfBroadcastThread(threading.Thread):
                     else:
                         remaining = -float('inf')
                         sleep_time = 0.0
-                    # Time throttling: messages are broadcasted only at provided time interval
-                    # TODO : Implement UTC syncing mechanism (requires that the actual host clock is UTC synced) ?
-                    #        which may be implemented to some accuracy level with ntp or GPS + PPS mechanisms in Python ?
+                    # Time throttling : messages are broadcasted only at provided time intervall
+                    # TODO : implement UTC syncing mecanism (requiered that the actual host clock is UTC synced) ?
+                    #        which may be implemented to some accuracy level with ntp or GPS + PPS mecanisms ? in Python ?
                     if (v[0] != None and len(v[0]) > 0) and remaining <= 0.0:
                         plane_messages.extend(v[0])
                         v[1] = now
@@ -217,7 +208,8 @@ class HackRfBroadcastThread(threading.Thread):
                         remaining = math.fmod(remaining,v2_sec)
                         if remaining < sleep_time:
                             sleep_time = remaining
-                            
+
+
             #print("sleep_time1",sleep_time)
             bc_length = len(plane_messages)
             if (bc_length > 0):
